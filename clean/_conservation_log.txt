@@ -1,0 +1,10 @@
+load master: in=12229 out=12229 
+load rmlist: in=16 out=16 
+load ledger: in=231254 out=231254 
+accounts_clean: in=12229 out=12229 one row per account
+rm_attribution: in=12229 out=12229 
+ledger orphan quarantine: in=231254 out=6 orphan accts=['ABF-002091', 'IIF-SIP-000267-wr', 'ISF-SIP-001766-Wrong']
+transactions after orphan removal: in=231254 out=231248 
+transactions join master: in=231248 out=231248 all matched to fund/RM
+monthly_flows: in=231248 out=212796 account x month grain
+customers: in=12229 out=8570 rolled to Mobile

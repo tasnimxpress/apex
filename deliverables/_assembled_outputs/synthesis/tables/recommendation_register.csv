@@ -1,0 +1,9 @@
+area,owner,finding,action,number
+Fund,Head of Funds / PM — Balanced Opp.,Balanced Opp. ranks last on durable-growth composite (18/100),Diagnose leakage + redesign retention proposition before chasing new flows,composite 18
+Fund,Head of Funds / PM — Capital Growth,Highest strict-churn fund = Capital Growth (47.2%),Targeted win-back on closed/discontinued accounts in this fund,47.2% churn
+SIP,Head of Retention / Ops,Overall SIP persistency 87.9% of expected installments paid; decay accelerates after the early months,Trigger a save-the-SIP call at the first missed installment (auto-flag from monthly_flows),87.9% persistency
+Fund,Marketing + PM,Surrenders run 20% in the month AFTER dividends vs 17% uniform,Pre-empt with a reinvest-your-dividend offer issued WITH each distribution,20% post-dividend surrenders
+Cross-sell,Head of Sales,4251 active single-fund customers; multi-fund penetration low,Second-fund campaign to single-fund holders via their existing servicing RM,৳5.1 Cr
+Cross-sell,Head of Sales,348 lump-sum-only (Non-SIP) customers carry no recurring stream,Non-SIP → SIP migration offer to convert one-off money into a persistency asset,৳2.9 Cr/yr
+RM,Sales Manager (1:1 coaching),"High-volume / low-retention RMs: MOHAMMAD JASIM AHMED, JANNATUL ISLAM","Coach on acquisition quality; tie a slice of incentive to 1-yr retention, not just sign-ups",2 RMs flagged
+RM,Head of Sales (allocation),Specialist (high-HHI) RMs are concentrated in single funds,Deploy high-retention specialists onto Capital Growth (highest-leakage fund),HHI map in section3

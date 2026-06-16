@@ -1,0 +1,134 @@
+[
+  {
+    "id": "S1",
+    "desc": "Registration No unique == 12,229 (raw)",
+    "status": "PASS",
+    "evidence": "raw rows=12229, unique=12229"
+  },
+  {
+    "id": "S1b",
+    "desc": "accounts_clean registration_no unique == 12,229",
+    "status": "PASS",
+    "evidence": "clean rows=12229, unique=12229"
+  },
+  {
+    "id": "S2",
+    "desc": "Mobile unique count ~8,570 (raw)",
+    "status": "PASS",
+    "evidence": "raw mobile unique=8570"
+  },
+  {
+    "id": "S2b",
+    "desc": "Multi-account customers ~2,352 (raw, mobiles with >1 account)",
+    "status": "PASS",
+    "evidence": "raw multi-account mobiles=2352"
+  },
+  {
+    "id": "S2c",
+    "desc": "customers.parquet: rows==8,570 and is_multi_account==2,352",
+    "status": "PASS",
+    "evidence": "customers rows=8570, multi(accounts_per_customer>1)=2352, is_multi_account flag sum=2352"
+  },
+  {
+    "id": "S3",
+    "desc": "Exactly 3 orphan ledger accounts (raw set-diff)",
+    "status": "PASS",
+    "evidence": "orphan accts=['ABF-002091', 'IIF-SIP-000267-wr', 'ISF-SIP-001766-Wrong'] (n=3), orphan rows raw=6"
+  },
+  {
+    "id": "S3b",
+    "desc": "0 master accounts dropped",
+    "status": "PASS",
+    "evidence": "master accounts missing from accounts_clean = 0"
+  },
+  {
+    "id": "S3c",
+    "desc": "orphans.csv accounts == raw orphan set",
+    "status": "PASS",
+    "evidence": "orphans.csv accts=['ABF-002091', 'IIF-SIP-000267-wr', 'ISF-SIP-001766-Wrong'], rows=6"
+  },
+  {
+    "id": "S4a",
+    "desc": "accounts_clean rows == master rows",
+    "status": "PASS",
+    "evidence": "accounts_clean=12229, master=12229"
+  },
+  {
+    "id": "S4b",
+    "desc": "transactions_clean + orphan rows == ledger rows",
+    "status": "PASS",
+    "evidence": "transactions_clean=231248 + orphan_rows=6 = 231254; ledger=231254"
+  },
+  {
+    "id": "S5",
+    "desc": "Status canonical counts match & sum to 12,229",
+    "status": "PASS",
+    "evidence": "raw={'active': 6925, 'closed': 3500, 'inactive': 1124, 'discontinued': 678, 'suspended': 2}; clean={'active': 6925, 'closed': 3500, 'inactive': 1124, 'discontinued': 678, 'suspended': 2}; clean_sum=12229"
+  },
+  {
+    "id": "S6",
+    "desc": "No null_sentinels / 1900-01-01 left in date/amount cols",
+    "status": "PASS",
+    "evidence": "residuals={'first_purchase_date': 0, 'tenure_maturity_date': 0, 'account_closing_date': 0, 'sip_discontinuation_date': 0, 'age': 0, 'onboarding_amount': 0, 'current_installment_amount': 0, 'investment_value_market': 0, 'tenor_in_month': 0}; tx_date 1900 count=0"
+  },
+  {
+    "id": "L1",
+    "desc": "FPD <= closing(where closed), <= disc(where discontinued), all <= as_of",
+    "status": "PASS",
+    "evidence": "fpd>close=0, fpd>disc=0, fpd>asof=0, close>asof=0, disc>asof=0"
+  },
+  {
+    "id": "L2",
+    "desc": "Tenure Maturity Date >= First Purchase Date",
+    "status": "PASS",
+    "evidence": "tmd<fpd violations=0"
+  },
+  {
+    "id": "L3",
+    "desc": "Current Installment Amount == 0 for all Non-SIP",
+    "status": "PASS",
+    "evidence": "clean Non-SIP rows=1801, nonzero installment=0; raw Non-SIP nonzero=0"
+  },
+  {
+    "id": "L4",
+    "desc": "Age out-of-range flagged not dropped (rows conserved)",
+    "status": "PASS",
+    "evidence": "clean rows=12229 == master 12229; recomputed out_of_range=2 vs flag=2; recomputed missing=57 vs flag=57"
+  },
+  {
+    "id": "L5",
+    "desc": "monthly_flows totals reconcile to transactions_clean by type",
+    "status": "PASS",
+    "evidence": "Purchase tx=5,219,456,433.47 mf=5,219,456,433.47 | Surrender tx=2,726,818,228.83 mf=2,726,818,228.83 | Dividend tx=249,886,432.00 mf=249,886,432.00"
+  },
+  {
+    "id": "L5b",
+    "desc": "transactions_clean totals == raw ledger (orphans removed)",
+    "status": "PASS",
+    "evidence": "raw(no orphan): Purchase=5,219,456,433.47 Surrender=2,726,818,228.83 Dividend=249,886,432.00"
+  },
+  {
+    "id": "C1",
+    "desc": "churn_strict column == {closed,discontinued} exactly; count==4,178",
+    "status": "PASS",
+    "evidence": "flag matches status definition=True; count=4178 (expected 4178)"
+  },
+  {
+    "id": "C2",
+    "desc": "churn_broad column == {closed,discontinued,inactive} exactly; count==5,302",
+    "status": "PASS",
+    "evidence": "flag matches status definition=True; count=5302 (expected 5302)"
+  },
+  {
+    "id": "C3",
+    "desc": "excluded_from_rates == suspended exactly (2 rows)",
+    "status": "PASS",
+    "evidence": "excluded_from_rates sum=2, suspended sum=2, match=True"
+  },
+  {
+    "id": "C4",
+    "desc": "Suspended not counted in churn_strict or churn_broad",
+    "status": "PASS",
+    "evidence": "suspended in strict=0, in broad=0"
+  }
+]

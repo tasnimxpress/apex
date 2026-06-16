@@ -1,0 +1,164 @@
+{
+  "customer_profile": {
+    "customers": 8570.0,
+    "multi_account_%": 27.44457409568261,
+    "multi_fund_%": 18.459743290548424,
+    "median_age": 37.0,
+    "median_total_aum": 50795.55499999999,
+    "median_total_onboarding": 12000.0,
+    "median_monthly_installment": 7000.0
+  },
+  "aum_top10pct_share": 0.6796019947963102,
+  "cluster_selection": [
+    {
+      "k": 2,
+      "inertia": 21984.010055389703,
+      "silhouette": 0.5592062956025342
+    },
+    {
+      "k": 3,
+      "inertia": 16447.33003515815,
+      "silhouette": 0.37526406366121623
+    },
+    {
+      "k": 4,
+      "inertia": 12157.057578839253,
+      "silhouette": 0.4175448577900128
+    },
+    {
+      "k": 5,
+      "inertia": 9763.442784986824,
+      "silhouette": 0.38602997289123125
+    },
+    {
+      "k": 6,
+      "inertia": 8637.685398227673,
+      "silhouette": 0.36550341889319554
+    },
+    {
+      "k": 7,
+      "inertia": 7510.50206368215,
+      "silhouette": 0.3593561697360605
+    },
+    {
+      "k": 8,
+      "inertia": 6673.83392781274,
+      "silhouette": 0.3730834000100958
+    }
+  ],
+  "clustering": {
+    "k": 4,
+    "silhouette_seed42": 0.4175448577900128,
+    "seed_silhouettes": [
+      0.4175448577900128,
+      0.4175448577900128,
+      0.4175448577900128
+    ],
+    "pairwise_ARI": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "cluster_profiles": [
+    {
+      "cluster": 0,
+      "customers": 2129,
+      "median_age": 45.0,
+      "median_monthly_installment": 20000.0,
+      "median_mean_tenor": 60.0,
+      "median_onboarding": 145000.0,
+      "median_aum": 312449.68,
+      "multi_fund_pct": 34.52325035227806,
+      "sip_only_pct": 78.7224048849225
+    },
+    {
+      "cluster": 1,
+      "customers": 909,
+      "median_age": 47.0,
+      "median_monthly_installment": 0.0,
+      "median_mean_tenor": 0.0,
+      "median_onboarding": 300000.0,
+      "median_aum": 0.0,
+      "multi_fund_pct": 9.900990099009901,
+      "sip_only_pct": 0.0
+    },
+    {
+      "cluster": 2,
+      "customers": 5167,
+      "median_age": 33.0,
+      "median_monthly_installment": 7000.0,
+      "median_mean_tenor": 60.0,
+      "median_onboarding": 7000.0,
+      "median_aum": 36483.15,
+      "multi_fund_pct": 13.353977162763691,
+      "sip_only_pct": 98.41300561254113
+    },
+    {
+      "cluster": 3,
+      "customers": 330,
+      "median_age": 34.0,
+      "median_monthly_installment": 7000.0,
+      "median_mean_tenor": 180.0,
+      "median_onboarding": 7000.0,
+      "median_aum": 57559.43,
+      "multi_fund_pct": 18.787878787878785,
+      "sip_only_pct": 98.7878787878788
+    }
+  ],
+  "cluster_fund_map": [
+    {
+      "cluster": 0,
+      "Apex Balanced Opportunity Fund": 12.494128698919681,
+      "Apex Capital Growth Fund": 25.270079849694692,
+      "Apex Fixed Income Fund": 28.79286049788633,
+      "Apex Shariah Growth Fund": 33.44293095349929
+    },
+    {
+      "cluster": 1,
+      "Apex Balanced Opportunity Fund": 45.87458745874587,
+      "Apex Capital Growth Fund": 10.34103410341034,
+      "Apex Fixed Income Fund": 40.92409240924093,
+      "Apex Shariah Growth Fund": 2.8602860286028604
+    },
+    {
+      "cluster": 2,
+      "Apex Balanced Opportunity Fund": 15.618347203406232,
+      "Apex Capital Growth Fund": 34.681633443003676,
+      "Apex Fixed Income Fund": 21.540545771240566,
+      "Apex Shariah Growth Fund": 28.159473582349527
+    },
+    {
+      "cluster": 3,
+      "Apex Balanced Opportunity Fund": 17.272727272727273,
+      "Apex Capital Growth Fund": 57.27272727272727,
+      "Apex Fixed Income Fund": 8.181818181818182,
+      "Apex Shariah Growth Fund": 17.272727272727273
+    }
+  ],
+  "assumptions": {
+    "median_onboarding_ticket": 12000.0,
+    "median_sip_annual": 84000.0
+  },
+  "cross_sell": [
+    {
+      "play": "1. Single->multi-fund (active)",
+      "target_customers": 4251,
+      "ticket": 12000.0,
+      "taka": 51012000.0
+    },
+    {
+      "play": "2. High-value single under cross-capable RM",
+      "target_customers": 2273,
+      "ticket": 12000.0,
+      "taka": 27276000.0
+    },
+    {
+      "play": "3. Non-SIP->SIP migration (annual)",
+      "target_customers": 348,
+      "ticket": 84000.0,
+      "taka": 29232000.0
+    }
+  ],
+  "cross_sell_total_taka": 80244000.0
+}

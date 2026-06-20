@@ -211,7 +211,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="cm">Covers every fund, customer and manager in the data</div>
       <div class="cm">Customers grouped by behaviour · how long accounts last</div>
       <div class="cm">All three brief sections fully answered</div>
-      <div class="cm">9 recommendations, each with a named owner</div>
+      <div class="cm">10 recommendations, each with a named owner</div>
     </div>
   </div>
   <div class="snotes">
@@ -474,44 +474,41 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 <!-- S6: RM PERFORMANCE — Section 3 Q1 -->
 <div class="slide f5" id="s6">
   <div class="sh">
-    <div class="badge">Section 3 · Question 1 · How Many Customers Each Manager Handles &amp; How Well</div>
+    <div class="badge">Section 3 · Question 1 · Comparing RMs — Size, Value, Specialization &amp; Quality</div>
     <div class="snum">06</div>
-    <h2 class="stitle">Lots of Customers ≠ Good Results:<br>The Manager Quality Gap</h2>
-    <p class="iline">Across 16 managers, how much money they bring in and how well they keep customers tell two different stories. The one who brings in the most money — Shanta Sheikh, ৳52.7 Crore across 1,730 accounts — also loses the most customers of any big manager (41.0%). Meanwhile Sonia Sheikh keeps 92 of every 100 customers a full year (the best on the team), and Kamrun Mia has the lowest loss rate at 23.7%. Under today's pay rules, handling lots of customers and keeping them don't go together.</p>
+    <h2 class="stitle">Account Count Misleads: Judge RMs on<br>Value, Specialization &amp; Acquisition Quality</h2>
+    <p class="iline">Three lenses separate the 16 RMs. A <strong>Volume × Value quadrant</strong> (team medians: 785 accounts, ৳18.7 Cr AUM) sorts them into Stars, Value-Focused, Volume-Driven and Developing — and shows the high-volume producers are not the high-value ones: Shanta Sheikh holds the biggest book (1,730 accounts, ৳52.7 Cr) yet leaks 41.0% of customers, while small-book Sonia Sheikh keeps the most (91.8% one-year retention on accounts she introduces). <strong>Specialization (HHI)</strong> shows most RMs pack 60–80% of their book into one or two funds. <strong>Acquisition quality</strong> — one-year retention by introducing RM — averages 86.2%, but Mohammad Jasim Ahmed and Jannatul Islam sit consistently in the low tail.</p>
   </div>
   <div class="hrule"></div>
   <div class="body c32">
     <div class="cell">
-      <div class="lbl">Each Manager — Money Brought In vs Customers Lost (Top 8 by Money)</div>
+      <div class="lbl">Volume × Value Quadrant — Accounts × AUM, Bubble = Churn</div>
       <div class="cc tall"><canvas id="cRM"></canvas></div>
-      <div class="note">Bars = money brought in (left side, ৳ Crore). Line = share of customers lost (right side). The red dashed line at 34% is the company average — a manager is flagged only if they hold a large book (1,000+ accounts) AND lose customers faster than this. Four qualify: Shanta Sheikh, Sharifa Begum, Shibani Datta and Mohammad Jasim Ahmed.</div>
+      <div class="note">Each bubble is one RM: horizontal = accounts serviced, vertical = AUM (৳ Crore), bubble size = churn rate. Dashed lines mark the team medians (785 accounts, ৳18.7 Cr), splitting the field into four quadrants. Stars sit top-right (high volume and high AUM) — but several still carry big bubbles (high churn), so being a large book is not the same as keeping customers.</div>
     </div>
     <div class="cell">
-      <div class="lbl">Manager Scorecard — Selected</div>
+      <div class="lbl">How the 16 RMs Split — Volume × Value</div>
       <table class="tbl" style="margin-top:4px">
-        <thead><tr><th>Manager</th><th>Accounts</th><th>Money (Cr)</th><th>Active Now</th><th>Lost</th><th></th></tr></thead>
+        <thead><tr><th>Quadrant</th><th>RMs</th><th>What it means</th></tr></thead>
         <tbody>
-          <tr><td class="hl">Shanta Sheikh</td><td class="mn">1,730</td><td class="mn">৳52.7</td><td class="mn" style="color:#FCA5A5">48.4%</td><td class="mn" style="color:#EF4444">41.0%</td><td><span class="tag" style="background:rgba(239,68,68,.15);color:#FCA5A5">⚠ Flag</span></td></tr>
-          <tr><td class="hl">Sharifa Begum</td><td class="mn">1,379</td><td class="mn">৳41.7</td><td class="mn" style="color:#FCA5A5">51.3%</td><td class="mn" style="color:#EF4444">36.4%</td><td><span class="tag" style="background:rgba(239,68,68,.15);color:#FCA5A5">⚠ Flag</span></td></tr>
-          <tr><td class="hl">Shibani Datta</td><td class="mn">1,636</td><td class="mn">৳31.5</td><td class="mn" style="color:#FCA5A5">49.7%</td><td class="mn" style="color:#EF4444">38.8%</td><td><span class="tag" style="background:rgba(239,68,68,.15);color:#FCA5A5">⚠ Flag</span></td></tr>
-          <tr><td class="hl">Mohammad Jasim Ahmed</td><td class="mn">1,392</td><td class="mn">৳26.3</td><td class="mn" style="color:#FCD34D">53.1%</td><td class="mn" style="color:#EF4444">35.4%</td><td><span class="tag" style="background:rgba(239,68,68,.15);color:#FCA5A5">⚠ Flag</span></td></tr>
-          <tr><td class="hl">Jannatul Islam</td><td class="mn">1,018</td><td class="mn">৳25.3</td><td class="mn" style="color:#6EE7B7">65.1%</td><td class="mn" style="color:#FCD34D">29.2%</td><td><span class="tag" style="background:rgba(148,163,184,.15);color:#94A3B8">Not flagged</span></td></tr>
-          <tr><td class="hl">Most. Kamrun Mia</td><td class="mn">726</td><td class="mn">৳15.9</td><td class="mn" style="color:#6EE7B7">70.2%</td><td class="mn" style="color:#6EE7B7;font-weight:700">23.7%</td><td><span class="tag" style="background:rgba(16,185,129,.2);color:#6EE7B7">⭐ Lowest loss</span></td></tr>
-          <tr><td class="hl">Mst. Sonia Sheikh</td><td class="mn">658</td><td class="mn">৳12.0</td><td class="mn" style="color:#6EE7B7">67.6%</td><td class="mn" style="color:#6EE7B7">26.0%</td><td><span class="tag" style="background:rgba(16,185,129,.2);color:#6EE7B7">⭐ Best kept 1 yr</span></td></tr>
+          <tr><td class="hl" style="color:#93C5FD">Star</td><td class="mn">7</td><td>High volume <em>and</em> high AUM — sustain the book</td></tr>
+          <tr><td class="hl" style="color:#6EE7B7">Value-Focused</td><td class="mn">1</td><td>Fewer accounts, deeper &amp; stickier (Rina Akter)</td></tr>
+          <tr><td class="hl" style="color:#FCD34D">Volume-Driven</td><td class="mn">1</td><td>Many accounts that don't compound into AUM (Sharmin Bhuiyan)</td></tr>
+          <tr><td class="hl" style="color:#94A3B8">Developing</td><td class="mn">7</td><td>Smaller books still building — incl. low-churn Kamrun Mia &amp; Sonia Sheikh</td></tr>
         </tbody>
       </table>
-      <div class="lbl" style="margin-top:12px">Key Points</div>
+      <div class="lbl" style="margin-top:12px">Three Lenses on RM Performance</div>
       <div class="txt"><ul>
-        <li><span class="hl">The Sonia Sheikh example:</span> Keeps 92 of every 100 customers a full year — the best on the team. How she signs customers up, picks the right fund for them, and follows up is not written down anywhere. It must be — then taught to the whole team.</li>
-        <li><span class="hl">Shanta Sheikh — the volume trap:</span> Brings in the most money (৳52.7 Crore across 1,730 accounts) but loses 41.0% of customers — the worst rate of any big manager. The headline number hides a book that's steadily leaking customers.</li>
-        <li><span class="hl">Four managers flagged:</span> Shanta Sheikh, Sharifa Begum, Shibani Datta and Mohammad Jasim Ahmed each hold 1,000+ accounts yet lose customers faster than the 34% company average. They're the priority for coaching, and their pay should reward keeping customers.</li>
-        <li><span class="hl">A big book can still be kept:</span> Jannatul Islam handles 1,018 accounts but loses only 29.2% — below average, so not flagged. And Kamrun Mia has the lowest loss of all at 23.7%. Volume doesn't have to mean poor results.</li>
+        <li><span class="hl">Volume ≠ value:</span> account count alone is a misleading scorecard. Shanta Sheikh has the largest book (1,730 accounts, ৳52.7 Crore) but the highest churn of the big RMs (41.0%); Kamrun Mia (23.7%) and Sonia Sheikh (26.0%) keep customers best on far smaller books.</li>
+        <li><span class="hl">Specialization (HHI):</span> most RMs concentrate 60–80% of their book in one or two funds — well above the 0.25 equal-spread baseline. This mirrors the 81.5% single-fund pattern among customers and leaves both RM and client exposed if one fund stumbles.</li>
+        <li><span class="hl">Acquisition quality:</span> one-year retention by introducing RM averages 86.2%, but Mohammad Jasim Ahmed and Jannatul Islam recur in the low-retention tail — accounts they introduce churn within 6–12 months. Acquisition quality, not product, is the root cause of that leakage.</li>
+        <li><span class="hl">Write down what works:</span> Sonia Sheikh keeps 92 of every 100 customers she introduces a full year — the best on the team. Capturing how she signs up, matches funds and follows up, then training all 16 RMs on it, is the cheapest, highest-return move.</li>
       </ul></div>
     </div>
   </div>
   <div class="snotes">
     <div class="nlbl">🎤 Notes</div>
-    <div class="ntxt"><strong>The real cause:</strong> "Lots of customers but lots leaving isn't a discipline problem — it's a pay problem. A sign-up bonus with no condition on customers staying tells managers that signing people up is what counts, whether or not they stay. Paying the full bonus only if the customer stays a year is a one-line change to pay that instantly changes what managers focus on." <strong>On Sonia Sheikh:</strong> "She keeps 92 of every 100 customers a full year — the best on the team, against a 34% average loss rate elsewhere. That know-how sits in one person's head. Writing it down and training everyone on it is the cheapest, highest-return thing this team can do."</div>
+    <div class="ntxt"><strong>Read the quadrant, not the headcount:</strong> "The biggest books aren't the best books. Seven RMs land in the Star quadrant on volume and AUM, but several — Shanta, Sumaya, Shibani — still leak 38–41% of customers. Account count flatters a book that's quietly churning, which is why we judge RMs on value and retention, not size." <strong>The fixable root cause:</strong> "Two introducing RMs — Mohammad Jasim Ahmed and Jannatul Islam — sit in the low-retention tail year after year; their new accounts don't survive the first year. That's an acquisition-quality and suitability issue we can screen for, not a product flaw. Pair a review of those two with capturing Sonia Sheikh's 92% playbook, and the whole team's quality lifts."</div>
   </div>
 </div>
 
@@ -562,82 +559,88 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 <!-- S8: RECOMMENDATIONS -->
 <div class="slide ca" id="s8">
   <div class="sh">
-    <div class="badge">Summary · Ranked Recommendations &amp; Owners</div>
+    <div class="badge">Summary · Recommendations by Section · Priority &amp; Owner</div>
     <div class="snum">08</div>
-    <h2 class="stitle">9 Actions. 3 Priority Levels.<br>Named Owners. No New Budget.</h2>
-    <p class="iline">Every recommendation is backed by a specific finding in the data, has a named owner, and can start within 60 days. None need new hires or extra money — just pointing the effort we already have at the things that matter most.</p>
+    <h2 class="stitle">10 Actions Across the 3 Analysis Sections.<br>Each Tagged by Priority &amp; Named Owner.</h2>
+    <p class="iline">The 10 recommendations, grouped the way the brief is — Fund Performance (4), Customer Acquisition (3) and RM Performance (3). Each is backed by a specific finding in the data, carries a named owner, and is tagged for how fast to start: <span class="tag" style="background:rgba(239,68,68,.15);color:#FCA5A5">P1 &middot; 14d</span> <span class="tag" style="background:rgba(245,158,11,.15);color:#FCD34D">P2 &middot; 30d</span> <span class="tag" style="background:rgba(16,185,129,.15);color:#6EE7B7">P3 &middot; 60d</span>. None need new hires or budget.</p>
   </div>
   <div class="hrule"></div>
   <div class="body c1">
     <div class="cell">
-      <div class="lbl" style="color:#FCA5A5">Priority 1 — Start Within 14 Days</div>
-      <div class="rec-grid">
-        <div class="rec" style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18)">
-          <div class="rec-p" style="color:#FCA5A5">Action 1 · Finding 1 · Fund Quality</div>
+      <div class="lbl" style="color:#FCD34D">Section 1 — Fund Performance Analysis · 4 Actions</div>
+      <div class="rec-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="rec" style="background:rgba(255,255,255,.035);border:1px solid var(--border);border-left:3px solid #F59E0B">
+          <div class="rec-p" style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;color:#FCD34D"><span class="tag" style="background:rgba(239,68,68,.15);color:#FCA5A5">P1 &middot; 14d</span> Action 1 &middot; Fund Quality</div>
           <div class="rec-t">Investigate the Balanced Opportunity Fund</div>
           <div class="rec-b">30-day deep-dive: ask 50 customers who left why, compare its fees and design against Fixed Income, and bring the board a clear choice — redesign it or merge it. Its money has shrunk to ৳0.78 for every ৳1 put in, and 54.9% of its accounts are no longer active.</div>
           <div class="rec-o">Owner: Head of Funds / Fund Manager</div>
         </div>
-        <div class="rec" style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18)">
-          <div class="rec-p" style="color:#FCA5A5">Action 2 · Finding 2 · Capital Growth</div>
+        <div class="rec" style="background:rgba(255,255,255,.035);border:1px solid var(--border);border-left:3px solid #F59E0B">
+          <div class="rec-p" style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;color:#FCD34D"><span class="tag" style="background:rgba(239,68,68,.15);color:#FCA5A5">P1 &middot; 14d</span> Action 2 &middot; Capital Growth</div>
           <div class="rec-t">Win Back Closed Capital Growth Accounts</div>
           <div class="rec-b">Pull accounts closed in the last 2 years — the top 200 by balance. Call list ready in 5 days, delivered by their manager with a win-back script. With 47.2% of customers lost, there's a large pool to win back, and we already know them.</div>
           <div class="rec-o">Owner: Head of Sales / Operations</div>
         </div>
-        <div class="rec" style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18)">
-          <div class="rec-p" style="color:#FCA5A5">Action 3 · Finding 4 · Manager Quality</div>
-          <div class="rec-t">Coach the Four Flagged Managers</div>
-          <div class="rec-b">One-on-one sessions with the four flagged managers — Shanta Sheikh, Sharifa Begum, Shibani Datta and Mohammad Jasim Ahmed. Focus: what's different between the customers they keep and the ones they lose. Set clear 6-month targets to get their loss rate below the 34% company average.</div>
-          <div class="rec-o">Owner: Sales Manager</div>
-        </div>
-      </div>
-      <div class="lbl" style="color:#FCD34D;margin-top:10px">Priority 2 — Start Within 30 Days</div>
-      <div class="rec-grid">
-        <div class="rec" style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.16)">
-          <div class="rec-p" style="color:#FCD34D">Action 4 · Finding 1 · Keeping Customers</div>
+        <div class="rec" style="background:rgba(255,255,255,.035);border:1px solid var(--border);border-left:3px solid #F59E0B">
+          <div class="rec-p" style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;color:#FCD34D"><span class="tag" style="background:rgba(245,158,11,.15);color:#FCD34D">P2 &middot; 30d</span> Action 3 &middot; Keeping Customers</div>
           <div class="rec-t">Flag the First Missed Monthly Payment</div>
           <div class="rec-b">Set up an automatic alert the first time a customer misses a monthly payment — their manager calls within 72 hours. Customers keep up 75.2% of payments yet we still lose 33.6%, so people drop out late; catch it early.</div>
           <div class="rec-o">Owner: Head of Retention / Operations</div>
         </div>
-        <div class="rec" style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.16)">
-          <div class="rec-p" style="color:#FCD34D">Action 5 · Finding 1 · Dividend Timing</div>
+        <div class="rec" style="background:rgba(255,255,255,.035);border:1px solid var(--border);border-left:3px solid #F59E0B">
+          <div class="rec-p" style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;color:#FCD34D"><span class="tag" style="background:rgba(245,158,11,.15);color:#FCD34D">P2 &middot; 30d</span> Action 4 &middot; Dividend Timing</div>
           <div class="rec-t">Get Ahead of Withdrawals After Dividends</div>
           <div class="rec-b">Add a "reinvest your dividend" offer to every dividend payout. February and August (right after the January and July dividends) each see about 10.6% of the year's withdrawals versus the 8.3% you'd expect if spread evenly — a predictable moment to step in before the account closes.</div>
           <div class="rec-o">Owner: Marketing + Fund Manager</div>
         </div>
-        <div class="rec" style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.16)">
-          <div class="rec-p" style="color:#FCD34D">Action 6 · Finding 3 · Big Customers</div>
+      </div>
+      <div class="lbl" style="color:#C4B5FD;margin-top:10px">Section 2 — Customer Acquisition &amp; Demographics · 3 Actions</div>
+      <div class="rec-grid">
+        <div class="rec" style="background:rgba(255,255,255,.035);border:1px solid var(--border);border-left:3px solid #8B5CF6">
+          <div class="rec-p" style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;color:#C4B5FD"><span class="tag" style="background:rgba(245,158,11,.15);color:#FCD34D">P2 &middot; 30d</span> Action 5 &middot; Big Customers</div>
           <div class="rec-t">Start Looking After Our Biggest Customers</div>
           <div class="rec-b">Pull the 857 largest customers and when each was last contacted. Every one contacted by a named manager within 30 days. Draft an "Apex Premier" service (a dedicated manager, a review every 3 months) for board approval.</div>
           <div class="rec-o">Owner: Head of Sales / Wealth</div>
         </div>
-      </div>
-      <div class="lbl" style="color:#6EE7B7;margin-top:10px">Priority 3 — Start Within 60 Days</div>
-      <div class="rec-grid">
-        <div class="rec" style="background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.16)">
-          <div class="rec-p" style="color:#6EE7B7">Action 7 · Finding 5 · Extra Sales</div>
+        <div class="rec" style="background:rgba(255,255,255,.035);border:1px solid var(--border);border-left:3px solid #8B5CF6">
+          <div class="rec-p" style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;color:#C4B5FD"><span class="tag" style="background:rgba(16,185,129,.15);color:#6EE7B7">P3 &middot; 60d</span> Action 6 &middot; Extra Sales</div>
           <div class="rec-t">Second-Fund Campaign — ৳5.1 Cr Opportunity</div>
           <div class="rec-b">Lists split by manager — 4,251 one-fund customers. Each manager offers a second fund. The analytics team builds the lists; the Head of Sales hands them out at the next weekly call. Target: 1 in 4 customers say yes.</div>
           <div class="rec-o">Owner: Head of Sales</div>
         </div>
-        <div class="rec" style="background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.16)">
-          <div class="rec-p" style="color:#6EE7B7">Action 8 · Finding 5 · Extra Sales</div>
+        <div class="rec" style="background:rgba(255,255,255,.035);border:1px solid var(--border);border-left:3px solid #8B5CF6">
+          <div class="rec-p" style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;color:#C4B5FD"><span class="tag" style="background:rgba(16,185,129,.15);color:#6EE7B7">P3 &middot; 60d</span> Action 7 &middot; Extra Sales</div>
           <div class="rec-t">Move One-Time Investors onto Monthly Plans — ৳2.9 Cr/yr</div>
           <div class="rec-b">348 one-time investors with no monthly plan. Pitch a monthly plan at the next customer review. Recommend Fixed Income — it keeps customers best and suits people who've already shown they can invest.</div>
           <div class="rec-o">Owner: Head of Sales</div>
         </div>
-        <div class="rec" style="background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.16)">
-          <div class="rec-p" style="color:#6EE7B7">Action 9 · Finding 4 · Fixing How Managers Are Paid</div>
+      </div>
+      <div class="lbl" style="color:#93C5FD;margin-top:10px">Section 3 — RM Performance &amp; Productivity · 3 Actions</div>
+      <div class="rec-grid">
+        <div class="rec" style="background:rgba(255,255,255,.035);border:1px solid var(--border);border-left:3px solid #3B82F6">
+          <div class="rec-p" style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;color:#93C5FD"><span class="tag" style="background:rgba(239,68,68,.15);color:#FCA5A5">P1 &middot; 14d</span> Action 8 &middot; Acquisition Quality</div>
+          <div class="rec-t">Review the Two Low-Retention Introducer Managers</div>
+          <div class="rec-b">Compliance and suitability review of the two managers whose acquired accounts churn well above the 86.2% team-average 1-year retention — Mohammad Jasim Ahmed and Jannatul Islam. Add a 90-day post-onboarding quality check on every new account: acquisition quality, not product, is the root cause of leakage.</div>
+          <div class="rec-o">Owner: Compliance</div>
+        </div>
+        <div class="rec" style="background:rgba(255,255,255,.035);border:1px solid var(--border);border-left:3px solid #3B82F6">
+          <div class="rec-p" style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;color:#93C5FD"><span class="tag" style="background:rgba(16,185,129,.15);color:#6EE7B7">P3 &middot; 60d</span> Action 9 &middot; Manager Pay</div>
           <div class="rec-t">Pay the Sign-up Bonus Only If Customers Stay a Year</div>
           <div class="rec-b">No full sign-up bonus on accounts that close within 12 months. A one-line change to how managers are paid that instantly shifts their focus toward customers who stay, not just sign-ups.</div>
           <div class="rec-o">Owner: Head of Sales / HR / Finance</div>
+        </div>
+        <div class="rec" style="background:rgba(255,255,255,.035);border:1px solid var(--border);border-left:3px solid #3B82F6">
+          <div class="rec-p" style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;color:#93C5FD"><span class="tag" style="background:rgba(16,185,129,.15);color:#6EE7B7">P3 &middot; 60d</span> Action 10 &middot; Manager Time</div>
+          <div class="rec-t">Move the Smallest Accounts to Self-Service</div>
+          <div class="rec-b">Let the smallest accounts be served by phone and app instead of a named manager. This frees manager time for customers who can grow — and lifts the value per customer that has been falling since 2018. Managers who handle many small accounts get a lighter, more focused book.</div>
+          <div class="rec-o">Owner: Head of Operations / Sales</div>
         </div>
       </div>
     </div>
   </div>
   <div class="snotes">
     <div class="nlbl">🎤 Notes</div>
-    <div class="ntxt"><strong>Close with this:</strong> "Nine actions, three priority levels, all within 60 days. None need new budget or new hires. Priority one stops the leak. Priority two protects what we already have. Priority three captures ৳8 Crore sitting with customers we already serve. I'm recommending you start with two things on Monday: the Balanced Opportunity deep-dive, and the Capital Growth win-back call list. Both can begin immediately. Both have named owners. Both have specific, measurable results."</div>
+    <div class="ntxt"><strong>Close with this:</strong> "Ten actions, organized by the three sections of the brief — four on fund performance, three on customers, three on managers. Each carries a priority tag and a named owner, and none need new budget. Start Monday with the two red P1s in Section 1: the Balanced Opportunity deep-dive and the Capital Growth win-back. Both begin immediately, both have owners, both have measurable results."</div>
   </div>
 </div>
 
@@ -819,22 +822,25 @@ function buildCharts(){
       scales:{x:{ticks:{callback:v=>'৳'+v+'Cr'},grid:{color:G}},y:{grid:{display:false}}}}
   });
 
-  /* S6 RM performance dual-axis */
-  const rmN=['Shanta Sheikh','Sharifa Begum','Shibani Datta','Kazi Jalal Rana','Mohammad Jasim Ahmed','Jannatul Islam','Sumaya Siddique','Rina Akter'];
-  const rmA=[52.7,41.7,31.5,29.9,26.3,25.3,21.2,19.2];
-  const rmC=[41.0,36.4,38.8,30.8,35.4,29.2,38.5,31.6];
-  const rmFlag=[true,true,true,false,true,false,false,false];
+  /* S6 RM Volume × Value quadrant (bubble = churn) */
+  const quadLines={id:'quadLines',afterDraw(c){const a=c.chartArea,x=c.scales.x,y=c.scales.y,xm=x.getPixelForValue(785),ym=y.getPixelForValue(18.7);const g=c.ctx;g.save();g.strokeStyle='rgba(255,255,255,.18)';g.setLineDash([5,4]);g.lineWidth=1;g.beginPath();g.moveTo(xm,a.top);g.lineTo(xm,a.bottom);g.moveTo(a.left,ym);g.lineTo(a.right,ym);g.stroke();g.restore();}};
   new Chart(document.getElementById('cRM'),{
-    type:'bar',
-    data:{labels:rmN,
-      datasets:[
-        {label:'Money Brought In (৳ Cr)',data:rmA,backgroundColor:rmFlag.map(f=>f?'rgba(239,68,68,.6)':'rgba(59,130,246,.55)'),borderColor:rmFlag.map(f=>f?'#EF4444':'#3B82F6'),borderWidth:1.5,borderRadius:4,yAxisID:'y'},
-        {label:'Customers Lost %',data:rmC,type:'line',borderColor:'rgba(255,255,255,.35)',backgroundColor:'transparent',pointBackgroundColor:rmC.map(c=>c>34?'#EF4444':'#6EE7B7'),borderWidth:1.8,pointRadius:5,yAxisID:'y2'},
-        {label:'34% company average',data:Array(8).fill(34),type:'line',borderColor:'rgba(239,68,68,.32)',borderDash:[4,3],borderWidth:1.2,pointRadius:0,fill:false,yAxisID:'y2'}
-      ]},
-    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
-      plugins:{legend:{position:'bottom',labels:{padding:12,boxWidth:10,filter:i=>i.text!=='34% company average'}}},
-      scales:{y:{min:0,ticks:{callback:v=>'৳'+v+'Cr'},grid:{color:G}},y2:{position:'right',min:0,max:50,ticks:{callback:v=>v+'%'},grid:{display:false}},x:{grid:{display:false},ticks:{maxRotation:35,font:{size:10}}}}}
+    type:'bubble',
+    data:{datasets:[
+      {label:'Star (high vol · high AUM)',backgroundColor:'rgba(59,130,246,.45)',borderColor:'#3B82F6',borderWidth:1,data:[
+        {x:1730,y:52.7,r:22.6,n:'Shanta Sheikh',ch:41.0},{x:1379,y:41.7,r:20.0,n:'Sharifa Begum',ch:36.4},{x:1636,y:31.5,r:21.3,n:'Shibani Datta',ch:38.8},{x:986,y:29.9,r:16.9,n:'Kazi Jalal Rana',ch:30.8},{x:1392,y:26.3,r:19.5,n:'Mohammad Jasim Ahmed',ch:35.4},{x:1018,y:25.3,r:16.1,n:'Jannatul Islam',ch:29.2},{x:845,y:21.2,r:21.2,n:'Sumaya Siddique',ch:38.5}]},
+      {label:'Value-Focused (low vol · high AUM)',backgroundColor:'rgba(16,185,129,.5)',borderColor:'#10B981',borderWidth:1,data:[
+        {x:770,y:19.2,r:17.4,n:'Rina Akter',ch:31.6}]},
+      {label:'Volume-Driven (high vol · low AUM)',backgroundColor:'rgba(245,158,11,.5)',borderColor:'#F59E0B',borderWidth:1,data:[
+        {x:800,y:18.1,r:17.1,n:'Sharmin Bhuiyan',ch:31.0}]},
+      {label:'Developing (small books)',backgroundColor:'rgba(148,163,184,.4)',borderColor:'#94A3B8',borderWidth:1,data:[
+        {x:726,y:15.9,r:13.0,n:'Kamrun Mia',ch:23.7},{x:658,y:12.0,r:14.3,n:'Sonia Sheikh',ch:26.0},{x:141,y:3.9,r:14.0,n:'Jasim Faruki',ch:25.5},{x:104,y:1.7,r:20.1,n:'Umme Lina Siddique',ch:36.5},{x:13,y:0.08,r:4,n:'Munira Begum',ch:0},{x:20,y:0.07,r:4,n:'Safura Mia',ch:0},{x:2,y:0.001,r:4,n:'Champa Dey',ch:0}]}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom',labels:{padding:7,boxWidth:9,font:{size:9}}},
+        tooltip:{callbacks:{label:c=>`${c.raw.n}: ${c.raw.x} acc · ৳${c.raw.y}Cr · ${c.raw.ch}% churn`}}},
+      scales:{y:{min:0,title:{display:true,text:'AUM (৳ Cr)',color:'rgba(255,255,255,.5)',font:{size:10}},grid:{color:G}},x:{min:0,title:{display:true,text:'Accounts serviced',color:'rgba(255,255,255,.5)',font:{size:10}},grid:{display:false}}}},
+    plugins:[quadLines]
   });
 
   /* S7 Team trend */

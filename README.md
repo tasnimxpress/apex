@@ -124,5 +124,5 @@ Lump-sum Legacy (909 customers, ৳0 AUM) are dormant re-engagement targets with
 - **SIP persistency ≠ retention.** Persistency measures whether installments are paid. A customer can maintain 100% persistency and still close their account (Capital Growth demonstrates this: 88.6% persistency, 47.2% churn). Do not substitute one metric for the other.
 - **Book multiple = AUM ÷ onboarding capital.** Measures capital retention over time, not investment performance. No NAV data was available.
 - **Churn = strict** (closed + discontinued) unless marked otherwise. Inactive accounts are excluded from the headline rate but reported as sensitivity. Suspended (2 accounts) excluded from all denominators.
-- **2025 data is partial** (Jan–May only). All 2025 totals understate the full year.
+- **2026 data is partial** (Jan–May only, through the 2026-05-31 snapshot). All 2026 totals understate the full year; 2025 is the latest complete year.
 - **Customer key = Mobile No** per the case brief. Shared or changed numbers may cause ~1–3% count inaccuracy.

@@ -1034,7 +1034,13 @@ new Chart(document.getElementById('cohortChart'), {
   options: {
     responsive: true, maintainAspectRatio: false,
     interaction: { mode: 'index', intersect: false },
-    plugins: { legend: { position: 'bottom', labels: { padding: 14, boxWidth: 10 } } },
+    plugins: { legend: { position: 'bottom', labels: { padding: 14, boxWidth: 10, usePointStyle: true,
+      generateLabels(chart) {
+        const items = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+        items.forEach(item => { item.pointStyle = 'line'; });
+        return items;
+      }
+    } } },
     scales: {
       y: { min: 45, max: 100, ticks: { callback: v => v+'%' }, grid: { color: 'rgba(255,255,255,0.04)' } },
       x: { grid: { display: false } }
@@ -1087,7 +1093,15 @@ new Chart(document.getElementById('sipChurnChart'), {
   options: {
     responsive: true, maintainAspectRatio: false,
     interaction: { mode: 'index', intersect: false },
-    plugins: { legend: { position: 'bottom', labels: { padding: 14, boxWidth: 10 } } },
+    plugins: { legend: { position: 'bottom', labels: { padding: 14, boxWidth: 10, usePointStyle: true,
+      generateLabels(chart) {
+        const items = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+        items.forEach((item, i) => {
+          item.pointStyle = chart.data.datasets[i].type === 'line' ? 'line' : 'rect';
+        });
+        return items;
+      }
+    } } },
     scales: {
       y:  { position: 'left', min: 78, max: 96, ticks: { callback: v => v+'%' }, grid: { color: 'rgba(255,255,255,0.04)' } },
       y2: { position: 'right', min: 0, max: 60, ticks: { callback: v => v+'%' }, grid: { display: false } },
@@ -1111,7 +1125,13 @@ new Chart(document.getElementById('survivalFundChart'), {
   options: {
     responsive: true, maintainAspectRatio: false,
     interaction: { mode: 'index', intersect: false },
-    plugins: { legend: { position: 'bottom', labels: { padding: 14, boxWidth: 10 } } },
+    plugins: { legend: { position: 'bottom', labels: { padding: 14, boxWidth: 10, usePointStyle: true,
+      generateLabels(chart) {
+        const items = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+        items.forEach(item => { item.pointStyle = 'line'; });
+        return items;
+      }
+    } } },
     scales: {
       y: { min: 40, max: 105, ticks: { callback: v => v+'%' }, grid: { color: 'rgba(255,255,255,0.04)' } },
       x: { grid: { display: false } }
@@ -1134,7 +1154,13 @@ new Chart(document.getElementById('sipDecayChart'), {
   options: {
     responsive: true, maintainAspectRatio: false,
     interaction: { mode: 'index', intersect: false },
-    plugins: { legend: { position: 'bottom', labels: { padding: 12, boxWidth: 10 } } },
+    plugins: { legend: { position: 'bottom', labels: { padding: 12, boxWidth: 10, usePointStyle: true,
+      generateLabels(chart) {
+        const items = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+        items.forEach(item => { item.pointStyle = 'line'; });
+        return items;
+      }
+    } } },
     scales: {
       y: { min: 70, max: 100, ticks: { callback: v => v+'%' }, grid: { color: 'rgba(255,255,255,0.04)' } },
       x: { grid: { display: false } }
@@ -1410,7 +1436,15 @@ new Chart(document.getElementById('surrenderChart'), {
   },
   options: {
     responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { position: 'bottom', labels: { padding: 12, boxWidth: 10 } } },
+    plugins: { legend: { position: 'bottom', labels: { padding: 12, boxWidth: 10, usePointStyle: true,
+      generateLabels(chart) {
+        const items = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+        items.forEach((item, i) => {
+          item.pointStyle = chart.data.datasets[i].type === 'line' ? 'line' : 'rect';
+        });
+        return items;
+      }
+    } } },
     scales: {
       y: { ticks: { callback: v => v+'%' }, grid: { color: 'rgba(255,255,255,0.04)' } },
       x: { grid: { display: false }, ticks: { maxRotation: 45 } }

@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apex Asset Management · Fund Intelligence Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B1628;--ink:#111827;--slate:#1E2D45;--steel:#2E4A6B;
+  --sky:#3B82F6;--aqua:#06B6D4;--mint:#10B981;--amber:#F59E0B;
+  --coral:#EF4444;--gold:#FBBF24;--purple:#8B5CF6;--lav:#A78BFA;
+  --white:#FFFFFF;--muted:#94A3B8;--border:rgba(255,255,255,0.07);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:#060D1A;color:var(--white);min-height:100vh}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:10px 32px;background:rgba(6,13,26,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-brand{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.06em;white-space:nowrap}
+.nav-pills{display:flex;gap:3px;flex-wrap:wrap;justify-content:center}
+.pill{padding:4px 10px;border-radius:20px;font-size:10.5px;font-weight:500;cursor:pointer;transition:all .2s;border:1px solid var(--border);color:var(--muted);background:transparent}
+.pill:hover,.pill.active{color:var(--white);border-color:var(--purple);background:rgba(139,92,246,.15)}
+.nav-ctr{font-family:'DM Mono',monospace;font-size:10.5px;color:var(--muted);white-space:nowrap}
+
+.slides{padding-top:58px}
+.slide{min-height:100vh;display:none;flex-direction:column;position:relative;overflow:hidden}
+.slide.active{display:flex}
+
+.sh{padding:32px 56px 20px;position:relative}
+.badge{display:inline-flex;align-items:center;gap:7px;padding:4px 12px;border-radius:4px;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px}
+.snum{position:absolute;right:56px;top:28px;font-family:'DM Mono',monospace;font-size:72px;font-weight:500;color:rgba(255,255,255,.037);line-height:1;pointer-events:none}
+.stitle{font-family:'Playfair Display',serif;font-size:clamp(22px,2.5vw,32px);font-weight:900;line-height:1.15;max-width:760px;margin-bottom:8px}
+.iline{font-size:13px;color:rgba(255,255,255,.57);max-width:680px;line-height:1.65;border-left:3px solid;padding-left:13px;margin-top:4px}
+.hrule{height:1px;background:linear-gradient(90deg,var(--border),transparent);margin:0 56px}
+
+.body{flex:1;display:grid;gap:1px;background:var(--border);margin:0 56px}
+.c3{grid-template-columns:1fr 1fr 1fr}
+.c2{grid-template-columns:1fr 1fr}
+.c1{grid-template-columns:1fr}
+.c32{grid-template-columns:3fr 2fr}
+.c23{grid-template-columns:2fr 3fr}
+.cell{background:rgba(11,22,40,.75);padding:20px 22px;display:flex;flex-direction:column;gap:8px}
+.cell:hover{background:rgba(14,27,50,.9)}
+.w2{grid-column:span 2}.w3{grid-column:span 3}
+.lbl{font-family:'DM Mono',monospace;font-size:9.5px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;display:flex;align-items:center;gap:7px}
+.lbl::after{content:'';flex:1;height:1px;background:var(--border)}
+.txt{font-size:12.5px;line-height:1.65;color:rgba(255,255,255,.75)}
+.txt ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+.txt li{display:flex;gap:8px;align-items:flex-start}
+.txt li::before{content:'→';font-size:10px;margin-top:3px;flex-shrink:0;opacity:.4}
+.hl{font-weight:600;color:var(--white)}
+.note{font-size:10.5px;color:rgba(255,255,255,.3);font-style:italic;border-top:1px solid var(--border);padding-top:5px;margin-top:4px;line-height:1.5}
+
+.cc{position:relative;width:100%;height:260px;margin-top:4px}
+.cc.tall{height:310px}.cc.sh2{height:200px}
+
+.krow{display:grid;gap:9px;margin-top:4px}
+.k4{grid-template-columns:repeat(4,1fr)}.k3{grid-template-columns:repeat(3,1fr)}
+.kcard{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:11px 13px}
+.kc-v{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;line-height:1}
+.kc-l{font-size:10.5px;color:var(--muted);margin-top:4px;line-height:1.4}
+
+.tbl{width:100%;border-collapse:collapse;font-size:11.5px}
+.tbl th{text-align:left;padding:6px 9px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);border-bottom:1px solid rgba(255,255,255,.1)}
+.tbl td{padding:7px 9px;border-bottom:1px solid var(--border);vertical-align:middle;line-height:1.4}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(255,255,255,.025)}
+.mn{font-family:'DM Mono',monospace;font-size:11px}
+.tag{display:inline-block;padding:2px 7px;border-radius:3px;font-family:'DM Mono',monospace;font-size:9.5px;font-weight:500}
+
+.risk{background:rgba(239,68,68,.06);border-left:3px solid var(--coral);border-radius:0 5px 5px 0;padding:10px 13px;font-size:12px;line-height:1.6;color:rgba(255,255,255,.7)}
+.risk strong{color:#FCA5A5}
+.opp{background:rgba(16,185,129,.06);border-left:3px solid var(--mint);border-radius:0 5px 5px 0;padding:10px 13px;font-size:12px;line-height:1.6;color:rgba(255,255,255,.7)}
+.opp strong{color:#6EE7B7}
+.tchip{padding:3px 9px;border-radius:20px;font-size:10.5px;font-weight:500;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
+
+.rec-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:4px}
+.rec{border-radius:5px;padding:12px 13px;display:flex;flex-direction:column;gap:4px}
+.rec-p{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1px}
+.rec-t{font-size:12px;font-weight:600;line-height:1.3}
+.rec-b{font-size:11px;color:rgba(255,255,255,.52);line-height:1.5;margin-top:1px}
+.rec-o{font-size:10px;color:rgba(255,255,255,.3);margin-top:2px}
+
+.cover{flex:1;display:flex;flex-direction:column;justify-content:center;padding:52px 56px;background:radial-gradient(ellipse at 72% 45%,rgba(139,92,246,.09),transparent 55%),radial-gradient(ellipse at 18% 75%,rgba(6,182,212,.055),transparent 50%)}
+.c-eye{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.18em;color:var(--lav);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:9px}
+.c-eye::before{content:'';width:20px;height:1px;background:var(--lav)}
+.c-h{font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,54px);font-weight:900;line-height:1.1;max-width:750px;margin-bottom:18px;background:linear-gradient(135deg,#fff 50%,rgba(255,255,255,.65));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.c-sub{font-size:14px;color:rgba(255,255,255,.47);max-width:540px;line-height:1.7;margin-bottom:30px}
+.c-stats{display:flex;gap:24px;margin-bottom:36px;flex-wrap:wrap}
+.cst{border-left:2px solid rgba(255,255,255,.09);padding-left:13px}
+.cs-v{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;color:var(--lav)}
+.cs-l{font-size:10.5px;color:var(--muted);margin-top:2px}
+.c-meta{display:flex;gap:13px;flex-wrap:wrap}
+.cm{font-size:11px;color:rgba(255,255,255,.34);display:flex;align-items:center;gap:6px}
+.cm::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--purple);flex-shrink:0}
+
+.snotes{background:transparent;padding:14px 56px calc(18px + 49px);display:flex;gap:14px;align-items:flex-start;margin-top:auto;padding-top:20px}
+.nlbl{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;padding-top:2px;min-width:88px}
+.ntxt{font-size:12px;line-height:1.7;color:rgba(255,255,255,.44);font-style:italic}
+.ntxt strong{color:rgba(255,255,255,.64);font-style:normal}
+
+.ia .badge{background:rgba(6,182,212,.1);color:#67E8F9;border:1px solid rgba(6,182,212,.22)}
+.ia .stitle{background:linear-gradient(135deg,#fff 55%,#67E8F9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ia .iline{border-color:var(--aqua)}.ia .lbl{color:#67E8F9}
+
+.f1 .badge{background:rgba(245,158,11,.1);color:#FCD34D;border:1px solid rgba(245,158,11,.2)}
+.f1 .stitle{background:linear-gradient(135deg,#fff 58%,#FCD34D);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.f1 .iline{border-color:var(--amber)}.f1 .lbl{color:#FCD34D}
+
+.f2 .badge{background:rgba(239,68,68,.1);color:#FCA5A5;border:1px solid rgba(239,68,68,.2)}
+.f2 .stitle{background:linear-gradient(135deg,#fff 58%,#FCA5A5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.f2 .iline{border-color:var(--coral)}.f2 .lbl{color:#FCA5A5}
+
+.f3 .badge{background:rgba(139,92,246,.1);color:#C4B5FD;border:1px solid rgba(139,92,246,.2)}
+.f3 .stitle{background:linear-gradient(135deg,#fff 58%,#C4B5FD);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.f3 .iline{border-color:var(--purple)}.f3 .lbl{color:#C4B5FD}
+
+.f4 .badge{background:rgba(16,185,129,.1);color:#6EE7B7;border:1px solid rgba(16,185,129,.2)}
+.f4 .stitle{background:linear-gradient(135deg,#fff 58%,#6EE7B7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.f4 .iline{border-color:var(--mint)}.f4 .lbl{color:#6EE7B7}
+
+.f5 .badge{background:rgba(59,130,246,.1);color:#93C5FD;border:1px solid rgba(59,130,246,.2)}
+.f5 .stitle{background:linear-gradient(135deg,#fff 58%,#93C5FD);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.f5 .iline{border-color:var(--sky)}.f5 .lbl{color:#93C5FD}
+
+.ca .badge{background:rgba(16,185,129,.1);color:#6EE7B7;border:1px solid rgba(16,185,129,.22)}
+.ca .stitle{background:linear-gradient(135deg,#fff 55%,#6EE7B7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ca .iline{border-color:var(--mint)}.ca .lbl{color:#6EE7B7}
+
+.ap .badge{background:rgba(148,163,184,.08);color:var(--muted);border:1px solid rgba(148,163,184,.18)}
+.ap .iline{border-color:rgba(148,163,184,.35)}.ap .lbl{color:var(--muted)}
+
+@keyframes fi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.slide.active>*{animation:fi .35s ease both}
+.slide.active>*:nth-child(2){animation-delay:.07s}
+.slide.active>*:nth-child(3){animation-delay:.13s}
+.slide.active>*:nth-child(4){animation-delay:.19s}
+
+.fnav{position:fixed;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:12px;padding:9px;background:rgba(6,13,26,.96);backdrop-filter:blur(12px);border-top:1px solid var(--border);z-index:100}
+.nbtn{padding:5px 18px;border-radius:5px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--white)}
+.nbtn:hover{background:rgba(255,255,255,.08)}.nbtn:disabled{opacity:.28;cursor:not-allowed}
+.nbtn.pr{background:var(--purple);border-color:var(--purple)}.nbtn.pr:hover{background:#7C3AED}
+.dots{display:flex;gap:5px;align-items:center}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.13);cursor:pointer;transition:all .2s}
+.dot.active{background:var(--purple);transform:scale(1.4)}
+.dot.ia.active{background:var(--aqua)}.dot.ca.active{background:var(--mint)}
+.dsep{width:1px;height:10px;background:rgba(255,255,255,.1);margin:0 2px}
+
+@media(max-width:860px){
+  nav{padding:8px 14px;flex-wrap:wrap;gap:5px}
+  .slides{padding-top:85px}
+  .snotes{padding:12px 18px calc(14px + 49px);flex-direction:column;gap:4px}
+  .sh,.cover{padding-left:18px;padding-right:18px}
+  .sh{padding-top:18px;padding-bottom:14px}
+  .hrule{margin:0 18px}
+  .body{margin:0 18px;grid-template-columns:1fr !important}
+  .w2,.w3{grid-column:span 1}
+  .snotes{padding:12px 18px 16px;flex-direction:column;gap:4px}
+  .k4{grid-template-columns:1fr 1fr}.rec-grid{grid-template-columns:1fr}
+}
+@media print{
+  nav,.fnav{display:none !important}
+  .slide{display:flex !important;page-break-after:always;min-height:100vh;padding-bottom:0 !important}
+  body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+<script>
+(function(){
+  var s=document.createElement('script');
+  s.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js';
+  s.onload=function(){document.dispatchEvent(new Event('chartjsReady'))};
+  document.head.appendChild(s);
+})();
+</script>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">Apex Asset Management · Fund Intelligence · 2026</span>
+  <div class="nav-pills">
+    <div class="pill ia" onclick="goTo(0)">Cover</div>
+    <div class="pill ia" onclick="goTo(1)">Overview</div>
+    <div class="pill f1" onclick="goTo(2)">Fund Ranking</div>
+    <div class="pill f2" onclick="goTo(3)">Fund Leakage</div>
+    <div class="pill f3" onclick="goTo(4)">Segments</div>
+    <div class="pill f4" onclick="goTo(5)">Cross-sell</div>
+    <div class="pill f5" onclick="goTo(6)">RM Performance</div>
+    <div class="pill f5" onclick="goTo(7)">Team Trend</div>
+    <div class="pill ca" onclick="goTo(8)">Actions</div>
+    <div class="pill ap" onclick="goTo(9)">Appendix</div>
+  </div>
+  <span class="nav-ctr" id="ctr">Slide 1 / 10</span>
+</nav>
+
+<div class="slides">
+
+<!-- S0: COVER -->
+<div class="slide active" id="s0">
+  <div class="cover">
+    <div class="c-eye">Senior Data Analyst Case Study · IDLC Asset Management</div>
+    <h1 class="c-h">Apex Asset Management<br>Fund Intelligence Report</h1>
+    <p class="c-sub">A full-cycle analysis of 4 mutual funds across 12,229 accounts, 8,570 customers, and 16 relationship managers — five structural findings with ৳8 Cr in quantified cross-sell opportunity.</p>
+    <div class="c-stats">
+      <div class="cst"><div class="cs-v">৳301.6 Cr</div><div class="cs-l">Total AUM (book value)</div></div>
+      <div class="cst"><div class="cs-v">8,570</div><div class="cs-l">Unique customers</div></div>
+      <div class="cst"><div class="cs-v">33.6%</div><div class="cs-l">Avg portfolio churn</div></div>
+      <div class="cst"><div class="cs-v">87.9%</div><div class="cs-l">SIP persistency</div></div>
+      <div class="cst"><div class="cs-v">৳249.3 Cr</div><div class="cs-l">Net flow (purchases − surrenders)</div></div>
+    </div>
+    <div class="c-meta">
+      <div class="cm">Python · Pandas · Scikit-learn · Lifelines</div>
+      <div class="cm">K-means clustering (k=4) · Kaplan-Meier survival</div>
+      <div class="cm">Sections 1–3 fully addressed</div>
+      <div class="cm">8 owner-assigned recommendations</div>
+    </div>
+  </div>
+  <div class="snotes">
+    <div class="nlbl">🎤 Notes</div>
+    <div class="ntxt"><strong>Open:</strong> "This analysis covers the complete Apex portfolio — four funds, 8,570 customers, 16 RMs. The headline is ৳301.6 Crore AUM. The story underneath is a 33.6% average churn rate — one in three accounts we open, we lose. Every slide explains why, and what to do about it."</div>
+  </div>
+</div>
+
+<!-- S1: EXECUTIVE OVERVIEW -->
+<div class="slide ia" id="s1">
+  <div class="sh">
+    <div class="badge">Portfolio Health at a Glance</div>
+    <div class="snum">01</div>
+    <h2 class="stitle">Five Structural Issues.<br>One Coherent Pattern.</h2>
+    <p class="iline">Gross AUM is growing — but so is leakage. Beneath the top-line numbers, four distinct problems compound: one fund in net decumulation, a volume–retention mismatch in the largest fund, 68% of AUM unprotected in the top customer decile, and RM incentives that reward sign-ups but not retention. Together they are a structural leak, not a cyclical dip.</p>
+  </div>
+  <div class="hrule"></div>
+  <div class="body c3">
+    <div class="cell w2">
+      <div class="lbl">Fund Quality Divergence — Composite Score vs Churn Rate</div>
+      <div class="cc"><canvas id="cOverview"></canvas></div>
+      <div class="note">Composite score: net flow 40% + 36m survival 25% + churn inverse 20% + SIP persistency 15%. Normalised 0–100. Churn = (Closed + Discontinued) / Total Accounts. All four funds share the same platform, customer base, and RM team — the divergence is programme design, not market conditions.</div>
+    </div>
+    <div class="cell">
+      <div class="lbl">5 Findings — Quick Reference</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:2px">
+        <div style="background:rgba(239,68,68,.07);border-left:3px solid #EF4444;border-radius:0 4px 4px 0;padding:9px 11px">
+          <div style="font-size:9px;color:#FCA5A5;font-family:'DM Mono',monospace;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px">S1-F1 · Fund Quality</div>
+          <div style="font-size:12px;font-weight:600">Balanced Opportunity in net decumulation</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.48);margin-top:1px">0.86× book multiple — only fund below 1.0×</div>
+        </div>
+        <div style="background:rgba(245,158,11,.07);border-left:3px solid #F59E0B;border-radius:0 4px 4px 0;padding:9px 11px">
+          <div style="font-size:9px;color:#FCD34D;font-family:'DM Mono',monospace;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px">S1-F2 · Leakage</div>
+          <div style="font-size:12px;font-weight:600">Capital Growth: biggest fund, highest churn</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.48);margin-top:1px">47.2% churn on 3,779 accounts</div>
+        </div>
+        <div style="background:rgba(139,92,246,.07);border-left:3px solid #8B5CF6;border-radius:0 4px 4px 0;padding:9px 11px">
+          <div style="font-size:9px;color:#C4B5FD;font-family:'DM Mono',monospace;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px">S2-F3 · Concentration</div>
+          <div style="font-size:12px;font-weight:600">68% of AUM in top 10% of customers</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.48);margin-top:1px">857 customers — no differentiated service</div>
+        </div>
+        <div style="background:rgba(59,130,246,.07);border-left:3px solid #3B82F6;border-radius:0 4px 4px 0;padding:9px 11px">
+          <div style="font-size:9px;color:#93C5FD;font-family:'DM Mono',monospace;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px">S3-F4 · RM Quality</div>
+          <div style="font-size:12px;font-weight:600">High-volume RMs building churn, not assets</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.48);margin-top:1px">17pp retention gap: best vs flagged RM</div>
+        </div>
+        <div style="background:rgba(16,185,129,.07);border-left:3px solid #10B981;border-radius:0 4px 4px 0;padding:9px 11px">
+          <div style="font-size:9px;color:#6EE7B7;font-family:'DM Mono',monospace;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px">S2-F5 · Opportunity</div>
+          <div style="font-size:12px;font-weight:600">৳8 Cr in cross-sell sits untouched</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.48);margin-top:1px">3 plays, existing relationships, zero acq. cost</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="snotes">
+    <div class="nlbl">🎤 Notes</div>
+    <div class="ntxt"><strong>The pattern:</strong> "These five findings aren't separate problems — they're one system. RM volume incentives drive low-quality accounts into Capital Growth, inflating churn. The same misalignment leaves high-value customers unmanaged, concentrating AUM risk at the top. Balanced Opportunity's decline is a product problem. Fix the incentives, protect the concentration, redesign the product — and the leak stops."</div>
+  </div>
+</div>
+
+<!-- S2: FUND RANKING — Section 1 Q1 -->
+<div class="slide f1" id="s2">
+  <div class="sh">
+    <div class="badge">Section 1 · Q1 · Fund Performance Ranking</div>
+    <div class="snum">02</div>
+    <h2 class="stitle">Fund Scorecard: A 5× Quality Gap<br>Across One Platform</h2>
+    <p class="iline">On a composite scoring framework — net flow, 36-month account survival, churn inverse, and SIP persistency — Fixed Income scores 98.8 and Balanced Opportunity scores 18.3. Same platform, same RM team, same customer base. The divergence is a programme design signal.</p>
+  </div>
+  <div class="hrule"></div>
+  <div class="body c3">
+    <div class="cell">
+      <div class="lbl">Composite Score Ranking</div>
+      <div class="cc"><canvas id="cScore"></canvas></div>
+      <div class="note">Higher = better. Fixed Income is the benchmark all other funds should aspire to replicate. Score is intra-fund relative — not an absolute performance metric.</div>
+    </div>
+    <div class="cell w2">
+      <div class="lbl">Full Fund Scorecard</div>
+      <div style="overflow-x:auto;margin-top:4px">
+        <table class="tbl">
+          <thead><tr><th>Rank</th><th>Fund</th><th>Accounts</th><th>AUM</th><th>Book Mult.</th><th>36m Survival</th><th>SIP Persist.</th><th>Churn</th><th>Score</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="tag" style="background:rgba(16,185,129,.15);color:#6EE7B7">#1</span></td>
+              <td class="hl">Fixed Income</td><td class="mn">~3,800</td><td class="mn">~৳100 Cr</td>
+              <td class="mn">1.12×</td><td class="mn" style="color:#6EE7B7">77.2%</td>
+              <td class="mn">88.4%</td><td class="mn" style="color:#6EE7B7">~16%</td>
+              <td class="mn" style="color:#6EE7B7;font-weight:700">98.8</td>
+            </tr>
+            <tr>
+              <td><span class="tag" style="background:rgba(245,158,11,.12);color:#FCD34D">#2</span></td>
+              <td class="hl">Shariah Growth</td><td class="mn">~2,500</td><td class="mn">~৳71 Cr</td>
+              <td class="mn">2.38×</td><td class="mn" style="color:#FCD34D">52.6%</td>
+              <td class="mn">88.6%</td><td class="mn" style="color:#FCD34D">~31%</td>
+              <td class="mn" style="color:#FCD34D;font-weight:700">59.3</td>
+            </tr>
+            <tr>
+              <td><span class="tag" style="background:rgba(245,158,11,.12);color:#FCD34D">#3</span></td>
+              <td class="hl">Capital Growth</td><td class="mn">3,779</td><td class="mn">~৳93 Cr</td>
+              <td class="mn">3.45×</td><td class="mn" style="color:#FCD34D">54.2%</td>
+              <td class="mn">88.6%</td><td class="mn" style="color:#EF4444">47.2%</td>
+              <td class="mn" style="color:#FCD34D;font-weight:700">56.5</td>
+            </tr>
+            <tr>
+              <td><span class="tag" style="background:rgba(239,68,68,.12);color:#FCA5A5">#4</span></td>
+              <td class="hl">Balanced Opp.</td><td class="mn">2,143</td><td class="mn">৳36.7 Cr</td>
+              <td class="mn" style="color:#EF4444">0.86×</td><td class="mn" style="color:#FCD34D">66.3%</td>
+              <td class="mn" style="color:#FCD34D">84.2%</td><td class="mn" style="color:#EF4444">~45%</td>
+              <td class="mn" style="color:#EF4444;font-weight:700">18.3</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note" style="margin-top:8px">AUM marked ~ is estimated from book multiple × relative account count. Balanced Opp. AUM (৳36.7 Cr) is directly computed. Churn = (Closed + Discontinued) / Total accounts per fund. SIP persistency ≠ retention — a customer can pay every installment and still close their account (Capital Growth demonstrates this).</div>
+      <div class="krow k4" style="margin-top:10px">
+        <div class="kcard" style="border-color:rgba(16,185,129,.2)"><div class="kc-v" style="color:#6EE7B7">৳249.3 Cr</div><div class="kc-l">Net flow (purchases − surrenders)</div></div>
+        <div class="kcard" style="border-color:rgba(239,68,68,.2)"><div class="kc-v" style="color:#FCA5A5">0.86×</div><div class="kc-l">Balanced Opp. book — below 1.0× break-even</div></div>
+        <div class="kcard" style="border-color:rgba(16,185,129,.2)"><div class="kc-v" style="color:#6EE7B7">3.45×</div><div class="kc-l">Capital Growth book — highest compounding</div></div>
+        <div class="kcard" style="border-color:rgba(245,158,11,.2)"><div class="kc-v" style="color:#FCD34D">87.9%</div><div class="kc-l">Portfolio SIP persistency (payment discipline)</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="snotes">
+    <div class="nlbl">🎤 Notes</div>
+    <div class="ntxt"><strong>Capital Growth paradox:</strong> "Highest book multiple (3.45×) plus highest churn (47.2%). The compounding is real — but so is the exit rate. Fix retention and Capital Growth becomes the star fund." <strong>Key distinction:</strong> "SIP persistency is 87–88% across all four funds — but churn ranges 16–47%. These are different measures. Persistency tells you if customers pay regularly. Churn tells you if they stay. Do not substitute one for the other."</div>
+  </div>
+</div>
+
+<!-- S3: FUND DEEP-DIVE — Section 1 Q2 -->
+<div class="slide f2" id="s3">
+  <div class="sh">
+    <div class="badge">Section 1 · Q2 · Fund Deep-dive &amp; Recommendations</div>
+    <div class="snum">03</div>
+    <h2 class="stitle">Leakage Is Structural:<br>Cohort Survival Deteriorated 2020–2022</h2>
+    <p class="iline">Account survival declined precisely during the high-volume acquisition push of 2020–2022. The 2025 cohort (82.1% projected 36m survival) suggests quality may be recovering. But Balanced Opportunity's 0.86× book multiple and 20.4% post-dividend surrender spike require immediate action — not observation.</p>
+  </div>
+  <div class="hrule"></div>
+  <div class="body c3">
+    <div class="cell w2">
+      <div class="lbl">36-Month Account Survival by Cohort Year (All Funds)</div>
+      <div class="cc"><canvas id="cCohort"></canvas></div>
+      <div class="note">Cohort survival = % of accounts opened in that year still active 36 months later. 2024–2025 are projected — insufficient elapsed time for observed outcome. Green reference at 70% = Fixed Income's sustained benchmark. The 2022 trough (51.9%) coincides with peak volume acquisition.</div>
+    </div>
+    <div class="cell">
+      <div class="lbl">36m Survival by Fund</div>
+      <div class="cc sh2"><canvas id="cSurv36"></canvas></div>
+      <div class="lbl" style="margin-top:10px">Recommendations per Fund</div>
+      <div class="txt"><ul>
+        <li><span class="hl">Fixed Income (#1):</span> Replicate the model. Document what this fund does differently at onboarding and cross-train across the platform.</li>
+        <li><span class="hl">Capital Growth (#3):</span> Add 1-yr retention gate to RM commission. Deploy high-retention RMs (Sonia Sheikh model) on new accounts. Win-back closed accounts &lt;24 months.</li>
+        <li><span class="hl">Shariah Growth (#2):</span> 97.6% SIP customers — but 47.4% exit by month 36. Product suitability criteria and onboarding messaging need audit. Mismatch between SIP discipline and long-term commitment.</li>
+        <li><span class="hl">Balanced Opp. (#4):</span> 30-day diagnostic sprint — exit survey, fee audit, redesign vs consolidation decision. Pre-empt dividend-month surrenders (20.4% of all exits) with proactive reinvest offers.</li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="snotes">
+    <div class="nlbl">🎤 Notes</div>
+    <div class="ntxt"><strong>The 2022 trough:</strong> "51.9% survival is the worst cohort on record. That year coincides with peak account acquisition. Volume was the priority — quality wasn't. Every subsequent cohort has partially recovered. 2025 at 82.1% is early data, but it's worth watching." <strong>Dividend surrender:</strong> "20.4% of all surrenders happen the month after dividend distributions. That's 3.7pp above the 16.7% uniform baseline. A proactive reinvest message sent before each dividend payout is a one-week operational change with immediate measurable impact."</div>
+  </div>
+</div>
+
+<!-- S4: CUSTOMER SEGMENTS — Section 2 Q1 -->
+<div class="slide f3" id="s4">
+  <div class="sh">
+    <div class="badge">Section 2 · Q1 · Customer Segmentation &amp; Fund Targeting</div>
+    <div class="snum">04</div>
+    <h2 class="stitle">Four Segments. Four Retention Strategies.<br>One Dormant Reactivation Pool.</h2>
+    <p class="iline">K-means clustering (k=4, silhouette=0.42) on AUM, installment size, age, and tenor reveals four behaviourally distinct groups. The most valuable — Senior High-Ticket (2,129 customers, median AUM ৳3.12L) — spans all four funds with no differentiated service. The most dormant — Lump-sum Legacy (909 customers, ৳0 AUM) — is a reactivation opportunity, not a lost cohort.</p>
+  </div>
+  <div class="hrule"></div>
+  <div class="body c3">
+    <div class="cell">
+      <div class="lbl">Customer Segment Distribution</div>
+      <div class="cc sh2"><canvas id="cSegDonut"></canvas></div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:6px">
+        <div style="background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.15);border-radius:4px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-size:11.5px;font-weight:600">Senior High-Ticket</div><div style="font-size:10px;color:rgba(255,255,255,.48);margin-top:1px">Age 45 · AUM ৳3.12L · multi-fund 34.5%</div></div>
+          <div style="font-family:'DM Mono',monospace;font-size:13px;color:#C4B5FD">2,129</div>
+        </div>
+        <div style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.12);border-radius:4px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-size:11.5px;font-weight:600">Lump-sum Legacy</div><div style="font-size:10px;color:rgba(255,255,255,.48);margin-top:1px">Age 47 · AUM ৳0 · fully withdrawn · re-engage</div></div>
+          <div style="font-family:'DM Mono',monospace;font-size:13px;color:#FCA5A5">909</div>
+        </div>
+        <div style="background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.12);border-radius:4px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-size:11.5px;font-weight:600">Core SIP</div><div style="font-size:10px;color:rgba(255,255,255,.48);margin-top:1px">Age 33 · AUM ৳36K · dominant mass segment</div></div>
+          <div style="font-family:'DM Mono',monospace;font-size:13px;color:#93C5FD">5,167</div>
+        </div>
+        <div style="background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.12);border-radius:4px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-size:11.5px;font-weight:600">Long-horizon SIP</div><div style="font-size:10px;color:rgba(255,255,255,.48);margin-top:1px">Age 34 · 180m tenor · highest lifetime value</div></div>
+          <div style="font-family:'DM Mono',monospace;font-size:13px;color:#6EE7B7">330</div>
+        </div>
+      </div>
+    </div>
+    <div class="cell w2">
+      <div class="lbl">Which Segment Does Each Fund Attract? (Stacked Account Count)</div>
+      <div class="cc tall"><canvas id="cFundSeg"></canvas></div>
+      <div class="note">Source: account-level fund assignment crossed with cluster membership. Capital Growth attracts the largest young/small-ticket cohort (1,792) — its high churn is partly a segment mismatch: young investors with shorter investment horizons. Fixed Income splits evenly, suggesting broader appeal. Shariah Growth's high young-starter count (1,455) combined with its 47.4% 36m dropout points to a product-suitability mismatch for that segment.</div>
+    </div>
+  </div>
+  <div class="snotes">
+    <div class="nlbl">🎤 Notes</div>
+    <div class="ntxt"><strong>On Lump-sum Legacy:</strong> "909 customers, ৳0 median AUM. They invested real money, withdrew it all, and stayed in our database. That is not churn — that is a dormant relationship. We have their number, their RM, and their investment history. A reactivation call with a Fixed Income offer is the highest-conversion, lowest-cost play available to us." <strong>Fund focus:</strong> "Capital Growth should focus on converting young/small-ticket customers to longer SIP tenors — the product works (3.45× book multiple) but onboarding needs to set longer-commitment expectations."</div>
+  </div>
+</div>
+
+<!-- S5: CROSS-SELL — Section 2 Q2 -->
+<div class="slide f4" id="s5">
+  <div class="sh">
+    <div class="badge">Section 2 · Q2 · Cross-sell Opportunity — Quantified</div>
+    <div class="snum">05</div>
+    <h2 class="stitle">৳8 Crore in Untouched Wallet Share.<br>Existing Relationships. Zero Acquisition Cost.</h2>
+    <p class="iline">81.5% of active customers hold only one fund. Three plays — single-to-multi-fund conversion, lump-sum to SIP migration, and high-value accounts under cross-capable RMs — identify ৳8.02 Cr in addressable new AUM. Multi-fund customers churn less: cross-sell is simultaneously a growth and a retention lever.</p>
+  </div>
+  <div class="hrule"></div>
+  <div class="body c23">
+    <div class="cell">
+      <div class="lbl">Cross-sell Pipeline by Play</div>
+      <div class="cc tall"><canvas id="cXsell"></canvas></div>
+      <div class="note">All estimates: median onboarding ticket ৳12,000 for one-time plays; ৳7,000/month × 12 = ৳84,000/yr for SIP conversion. Conversion assumed 25–30% (warm RM relationship). Conservative year-1 realizable: ৳2–3 Cr at 25–30% conversion vs full pipeline.</div>
+    </div>
+    <div class="cell">
+      <div class="lbl">Play Details</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:2px">
+        <div style="background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.18);border-radius:5px;padding:12px 14px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+            <div style="font-size:9px;color:#6EE7B7;font-family:'DM Mono',monospace;letter-spacing:.1em;text-transform:uppercase">Play 1 — Largest &amp; Fastest</div>
+            <div style="font-family:'DM Mono',monospace;font-size:15px;color:#6EE7B7;font-weight:500">৳5.10 Cr</div>
+          </div>
+          <div style="font-size:12.5px;font-weight:600;margin-bottom:3px">Single → Multi-fund Conversion</div>
+          <div style="font-size:11.5px;color:rgba(255,255,255,.53);line-height:1.6">4,251 active customers holding only one fund. Their RM has the relationship. A second-fund offer is a phone call with supporting data — no acquisition cost.</div>
+          <div style="font-size:10px;color:rgba(16,185,129,.7);margin-top:4px">⚡ Actionable in 2 weeks · Owner: Head of Sales</div>
+        </div>
+        <div style="background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.18);border-radius:5px;padding:12px 14px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+            <div style="font-size:9px;color:#FCD34D;font-family:'DM Mono',monospace;letter-spacing:.1em;text-transform:uppercase">Play 2 — Highest Recurring Value</div>
+            <div style="font-family:'DM Mono',monospace;font-size:15px;color:#FCD34D;font-weight:500">৳2.92 Cr/yr</div>
+          </div>
+          <div style="font-size:12.5px;font-weight:600;margin-bottom:3px">Non-SIP → SIP Migration</div>
+          <div style="font-size:11.5px;color:rgba(255,255,255,.53);line-height:1.6">348 lump-sum customers with no SIP. ৳7,000/month generates ৳84,000/year per customer. They've shown investment capacity — they haven't been offered a recurring product.</div>
+          <div style="font-size:10px;color:rgba(245,158,11,.7);margin-top:4px">⚡ Actionable in 30 days · Owner: Head of Sales</div>
+        </div>
+        <div style="background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.18);border-radius:5px;padding:12px 14px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+            <div style="font-size:9px;color:#93C5FD;font-family:'DM Mono',monospace;letter-spacing:.1em;text-transform:uppercase">Play 3 — High-value Targeting</div>
+            <div style="font-family:'DM Mono',monospace;font-size:15px;color:#93C5FD;font-weight:500">৳2.73 Cr</div>
+          </div>
+          <div style="font-size:12.5px;font-weight:600;margin-bottom:3px">High-value Singles Under Cross-capable RMs</div>
+          <div style="font-size:11.5px;color:rgba(255,255,255,.53);line-height:1.6">2,273 high-AUM single-fund customers, managed by RMs with demonstrated multi-fund track records. The match is already made.</div>
+          <div style="font-size:10px;color:rgba(59,130,246,.7);margin-top:4px">⚡ Actionable in 30 days · Owner: Head of Sales</div>
+        </div>
+      </div>
+      <div class="opp" style="margin-top:10px">At a conservative <strong>25% conversion on Play 1 only</strong>, Apex books ~৳1.3 Cr in new AUM immediately. Play 3 at 30% conversion adds <strong>৳2.56 Cr/yr recurring</strong>. Combined year-1 conservative estimate: <strong>৳3.8 Cr</strong> — zero new headcount.</div>
+    </div>
+  </div>
+  <div class="snotes">
+    <div class="nlbl">🎤 Notes</div>
+    <div class="ntxt"><strong>The stickiness angle:</strong> "Multi-fund customers don't leave. Two fund accounts means two products, two tenors, two reasons to stay. Every cross-sell creates a switching cost. We're not just adding AUM — we're building lock-in." <strong>Play 3 is the highest-value per customer:</strong> "৳84,000 per year, per customer, recurring. From 348 people we already have. That's the highest lifetime-value play of the three."</div>
+  </div>
+</div>
+
+<!-- S6: RM PERFORMANCE — Section 3 Q1 -->
+<div class="slide f5" id="s6">
+  <div class="sh">
+    <div class="badge">Section 3 · Q1 · RM Portfolio Size, Specialization &amp; Value Creation</div>
+    <div class="snum">06</div>
+    <h2 class="stitle">High Volume ≠ High Value:<br>The RM Quality Gap</h2>
+    <p class="iline">Across 16 RMs, AUM introduced and 1-year account retention tell two different stories. The platform's top retention performer (MST. Sonia Sheikh, 91.8% 1yr retention, 8.4% churn) manages 296 accounts. The highest-volume producer (Shanta Sheikh, 976 accounts, ৳34.8 Cr) carries 36.3% churn — 4× Sonia's rate. Volume and quality are not correlated under the current incentive structure.</p>
+  </div>
+  <div class="hrule"></div>
+  <div class="body c32">
+    <div class="cell">
+      <div class="lbl">RM Performance — AUM Introduced vs 1-Year Retention Rate</div>
+      <div class="cc tall"><canvas id="cRM"></canvas></div>
+      <div class="note">Bars = AUM introduced (left axis, ৳ Cr). Line = 1-year retention % (right axis). Flagged RMs: M. Jasim Ahmed (83.4%) and Jannatul Islam (85.8%). Red dashed threshold at 86% — below this marks quality concern. Sonia Sheikh (91.8%) is the benchmark. All figures based on accounts opened 12+ months before data cut.</div>
+    </div>
+    <div class="cell">
+      <div class="lbl">RM Scorecard — Selected</div>
+      <table class="tbl" style="margin-top:4px">
+        <thead><tr><th>RM</th><th>Accts</th><th>AUM (Cr)</th><th>1yr Ret.</th><th>Churn</th><th></th></tr></thead>
+        <tbody>
+          <tr><td class="hl">Shanta Sheikh</td><td class="mn">976</td><td class="mn">৳34.8</td><td class="mn" style="color:#FCD34D">63.7%</td><td class="mn" style="color:#EF4444">36.3%</td><td><span class="tag" style="background:rgba(245,158,11,.12);color:#FCD34D">High Vol</span></td></tr>
+          <tr><td class="hl">Sharifa Begum</td><td class="mn">~620</td><td class="mn">৳21.4</td><td class="mn" style="color:#6EE7B7">87.6%</td><td class="mn">~18%</td><td><span class="tag" style="background:rgba(16,185,129,.12);color:#6EE7B7">Quality</span></td></tr>
+          <tr><td class="hl">Shibani Datta</td><td class="mn">~480</td><td class="mn">৳16.3</td><td class="mn" style="color:#6EE7B7">86.3%</td><td class="mn">~20%</td><td><span class="tag" style="background:rgba(16,185,129,.12);color:#6EE7B7">Quality</span></td></tr>
+          <tr><td class="hl">MST. Sonia Sheikh</td><td class="mn">296</td><td class="mn">~৳8</td><td class="mn" style="color:#6EE7B7;font-weight:700">91.8%</td><td class="mn" style="color:#6EE7B7;font-weight:700">8.4%</td><td><span class="tag" style="background:rgba(16,185,129,.2);color:#6EE7B7">⭐ Best</span></td></tr>
+          <tr><td class="hl">M. Jasim Ahmed</td><td class="mn">727</td><td class="mn">৳14.8</td><td class="mn" style="color:#EF4444">83.4%</td><td class="mn" style="color:#EF4444">24.6%</td><td><span class="tag" style="background:rgba(239,68,68,.15);color:#FCA5A5">⚠ Flag</span></td></tr>
+          <tr><td class="hl">Jannatul Islam</td><td class="mn">495</td><td class="mn">~৳11</td><td class="mn" style="color:#FCD34D">85.8%</td><td class="mn" style="color:#FCD34D">11.1%</td><td><span class="tag" style="background:rgba(239,68,68,.12);color:#FCA5A5">⚠ Flag</span></td></tr>
+        </tbody>
+      </table>
+      <div class="lbl" style="margin-top:12px">Key Observations</div>
+      <div class="txt"><ul>
+        <li><span class="hl">Sonia Sheikh model:</span> 296 accounts, 91.8% 1yr retention, 8.4% churn. Her onboarding process, fund suitability criteria, and follow-up cadence are not documented. They must be — then replicated across the team.</li>
+        <li><span class="hl">Jasim Ahmed cost of churn:</span> 24.6% churn on 727 accounts ≈ 179 accounts lost. At median AUM ৳18,300/account, that is ৳3.3 Cr in churned AUM from one RM alone.</li>
+        <li><span class="hl">Jannatul Islam — HHI risk:</span> High fund concentration (HHI 3,679). Narrow specialization creates portfolio risk if that fund underperforms. Coaching should address product diversification, not just retention.</li>
+        <li><span class="hl">Shanta Sheikh — volume trap:</span> Highest AUM producer (৳34.8 Cr) but 36.3% churn. The gross AUM figure obscures a book with structural attrition built in.</li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="snotes">
+    <div class="nlbl">🎤 Notes</div>
+    <div class="ntxt"><strong>Root cause:</strong> "The high-volume / high-churn pattern is not a discipline problem — it's an incentive design problem. A sign-up bonus with no retention gate tells RMs that acquiring accounts is valuable regardless of whether those accounts stay. A 1-year retention gate on commissions is a one-line change to compensation that immediately realigns what RMs optimise for." <strong>On Sonia Sheikh:</strong> "Her retention rate is 8.5pp above the next best RM. That knowledge lives in one person's head. Documenting it and training on it is the highest-ROI L&D investment available to this team."</div>
+  </div>
+</div>
+
+<!-- S7: TEAM TREND — Section 3 Q2 -->
+<div class="slide f5" id="s7">
+  <div class="sh">
+    <div class="badge">Section 3 · Q2 · Retail Sales Team Performance &amp; Management Actions</div>
+    <div class="snum">07</div>
+    <h2 class="stitle">Team Is Growing Fast —<br>Quality Has Not Kept Pace</h2>
+    <p class="iline">New accounts grew 3.4× from 2021 to 2024. AUM introduced grew 5×. But cohort survival deteriorated precisely during this surge. The 2025 partial year shows 643 accounts introducing ৳37.8 Cr — an average ticket of ৳5.9L vs ৳2.4L in 2024. If that shift is structural, it is the most important positive signal in the dataset.</p>
+  </div>
+  <div class="hrule"></div>
+  <div class="body c32">
+    <div class="cell">
+      <div class="lbl">Team YoY — New Accounts &amp; AUM Introduced (2021–2025)</div>
+      <div class="cc tall"><canvas id="cTeam"></canvas></div>
+      <div class="note">Bars = new accounts opened that year (left axis). Line = AUM introduced in ৳ Cr (right axis). 2025 = Jan–May only (~5 months); annualised pace: ~1,544 accounts / ~৳90.7 Cr. Average AUM per new account: 2021=৳2.4L, 2022=৳2.4L, 2023=৳2.8L, 2024=৳2.4L, 2025=৳5.9L — a significant quality shift if it holds.</div>
+    </div>
+    <div class="cell">
+      <div class="lbl">What Management Should Act On</div>
+      <div class="txt"><ul>
+        <li><span class="hl">Restructure RM incentives immediately:</span> Add a 1-year account retention gate to all sign-up commissions. No full bonus on accounts that close within 12 months. This single change is the highest-leverage action available to management.</li>
+        <li><span class="hl">Document the Sonia Sheikh playbook:</span> Onboarding call script, fund suitability criteria, 90-day follow-up cadence. Cascade to all 16 RMs through the Sales Manager within 30 days.</li>
+        <li><span class="hl">Add RM retention to monthly review:</span> Currently volume is the only RM metric on the monthly dashboard. Adding 1-year account retention makes the quality–volume tradeoff visible — and actionable.</li>
+        <li><span class="hl">Preferential allocation for Capital Growth:</span> New Capital Growth accounts should be assigned preferentially to RMs with &gt;88% 1-yr retention until flagged RMs demonstrate measurable improvement.</li>
+        <li><span class="hl">Validate the 2025 quality shift:</span> The ৳5.9L average ticket in 2025 is the highest on record. If this reflects a deliberate strategic shift toward higher-ticket customers, it should be formally recognised and reinforced — not just observed.</li>
+      </ul></div>
+      <div class="opp" style="margin-top:8px">If 2025's ৳5.9L average ticket holds through December, the team is on pace for <strong>~৳90 Cr AUM introduced in 2025</strong> — 3.5× the 2021 total. Protecting this trajectory requires resolving the structural issues <strong>before they catch up with the growth numbers.</strong></div>
+    </div>
+  </div>
+  <div class="snotes">
+    <div class="nlbl">🎤 Notes</div>
+    <div class="ntxt"><strong>Growth-quality gap:</strong> "The team tripled output between 2021 and 2024. Cohort survival deteriorated through 2022. Volume and quality moved in opposite directions. The 2025 data suggests that might be reversing — but we should confirm whether it's structural or coincidental before declaring success." <strong>The 2025 signal:</strong> "৳5.9L average AUM per new account in 2025 vs ৳2.4L in 2024. That is a 2.5× jump in account quality in one year. If RMs are deliberately targeting higher-value customers, that strategy is working — and it needs to be named, rewarded, and replicated."</div>
+  </div>
+</div>
+
+<!-- S8: RECOMMENDATIONS -->
+<div class="slide ca" id="s8">
+  <div class="sh">
+    <div class="badge">Synthesis · Prioritised Recommendations &amp; Owners</div>
+    <div class="snum">08</div>
+    <h2 class="stitle">8 Actions. 3 Priority Tiers.<br>Named Owners. No New Budget.</h2>
+    <p class="iline">Every recommendation is tied to a specific data finding, has a named owner, and can be initiated within 60 days. None require new headcount or capital — only reprioritisation of existing effort toward the highest-value levers.</p>
+  </div>
+  <div class="hrule"></div>
+  <div class="body c1">
+    <div class="cell">
+      <div class="lbl" style="color:#FCA5A5">Priority 1 — Initiate Within 14 Days</div>
+      <div class="rec-grid">
+        <div class="rec" style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18)">
+          <div class="rec-p" style="color:#FCA5A5">R1 · S1-F1 · Fund Quality</div>
+          <div class="rec-t">Diagnose Balanced Opportunity Fund</div>
+          <div class="rec-b">30-day sprint: exit survey (50 closed accounts), fee/product audit vs Fixed Income, board recommendation on redesign vs consolidation. Fund has ৳6 Cr capital gap and 54.9% non-active rate.</div>
+          <div class="rec-o">Owner: Head of Funds / PM</div>
+        </div>
+        <div class="rec" style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18)">
+          <div class="rec-p" style="color:#FCA5A5">R2 · S1-F2 · Capital Growth</div>
+          <div class="rec-t">Win-back Capital Growth Accounts</div>
+          <div class="rec-b">Extract closed accounts &lt;24 months old, top 200 by AUM. Call list in 5 days. RM-delivered with win-back script. 47.2% churn = large reactivation pool with warm relationship history.</div>
+          <div class="rec-o">Owner: Head of Sales / Ops</div>
+        </div>
+        <div class="rec" style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18)">
+          <div class="rec-p" style="color:#FCA5A5">R7 · S3-F4 · RM Quality</div>
+          <div class="rec-t">Coach Flagged RMs on Quality</div>
+          <div class="rec-b">1-on-1 sessions with Jasim Ahmed and Jannatul Islam. Focus: what differs between retained and churned accounts in their own books. Set measurable 6-month targets (&gt;87% 1yr retention).</div>
+          <div class="rec-o">Owner: Sales Manager</div>
+        </div>
+      </div>
+      <div class="lbl" style="color:#FCD34D;margin-top:10px">Priority 2 — Initiate Within 30 Days</div>
+      <div class="rec-grid">
+        <div class="rec" style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.16)">
+          <div class="rec-p" style="color:#FCD34D">R3 · S1-F1 · Retention</div>
+          <div class="rec-t">Auto-flag First Missed SIP</div>
+          <div class="rec-b">Enable operational alert on first missed installment — RM follow-up within 72hrs. 87.9% persistency with 33.6% portfolio churn means dropout happens late; catch it early.</div>
+          <div class="rec-o">Owner: Head of Retention / Ops</div>
+        </div>
+        <div class="rec" style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.16)">
+          <div class="rec-p" style="color:#FCD34D">R4 · S1-F1 · Dividend Signal</div>
+          <div class="rec-t">Pre-empt Post-Dividend Surrenders</div>
+          <div class="rec-b">Build proactive reinvest offer into every dividend distribution. 20.4% of surrenders happen in the month after dividend — a predictable window to intervene before the account closes.</div>
+          <div class="rec-o">Owner: Marketing + PM</div>
+        </div>
+        <div class="rec" style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.16)">
+          <div class="rec-p" style="color:#FCD34D">R6 · S2-F3 · Concentration</div>
+          <div class="rec-t">Launch Senior High-Ticket Coverage</div>
+          <div class="rec-b">Export 857 Senior High-Ticket customers with last-contact date. Every account contacted by named RM within 30 days. Draft Apex Premier tier (named RM, quarterly review) for board approval.</div>
+          <div class="rec-o">Owner: Head of Sales / Wealth</div>
+        </div>
+      </div>
+      <div class="lbl" style="color:#6EE7B7;margin-top:10px">Priority 3 — Initiate Within 60 Days</div>
+      <div class="rec-grid">
+        <div class="rec" style="background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.16)">
+          <div class="rec-p" style="color:#6EE7B7">R5 · S2-F5 · Cross-sell</div>
+          <div class="rec-t">Second-Fund Campaign — ৳5.1 Cr Pipeline</div>
+          <div class="rec-b">Segmented lists by RM — 4,251 single-fund customers. RM delivers second-fund offer. Analytics delivers lists; Head of Sales distributes in next weekly call. Target: 25% conversion rate.</div>
+          <div class="rec-o">Owner: Head of Sales</div>
+        </div>
+        <div class="rec" style="background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.16)">
+          <div class="rec-p" style="color:#6EE7B7">R8 · S2-F5 · Cross-sell</div>
+          <div class="rec-t">Non-SIP → SIP Migration — ৳2.9 Cr/yr</div>
+          <div class="rec-b">348 lump-sum customers with no SIP. Embed SIP conversion pitch in next client review cycle. Fixed Income recommended — strongest retention profile, best fit for capacity-demonstrated customers.</div>
+          <div class="rec-o">Owner: Head of Sales</div>
+        </div>
+        <div class="rec" style="background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.16)">
+          <div class="rec-p" style="color:#6EE7B7">R8 · S3-F4 · Incentive Fix</div>
+          <div class="rec-t">Add Retention Gate to RM Commission</div>
+          <div class="rec-b">No full sign-up bonus on accounts that close within 12 months. One-line change to the compensation structure that immediately realigns RM behaviour toward durable, retained acquisitions.</div>
+          <div class="rec-o">Owner: Head of Sales / HR / Finance</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="snotes">
+    <div class="nlbl">🎤 Notes</div>
+    <div class="ntxt"><strong>Close with this:</strong> "Eight actions, three tiers, all within 60 days. None require new budget or headcount. Priority one stops the structural leak. Priority two protects what we already have. Priority three captures ৳8 Crore sitting in existing relationships. I'm recommending you start with two things on Monday: the Balanced Opportunity diagnostic sprint, and the Capital Growth win-back call list. Both can begin immediately. Both have named owners. Both have specific, measurable outcomes."</div>
+  </div>
+</div>
+
+<!-- S9: APPENDIX -->
+<div class="slide ap" id="s9">
+  <div class="sh">
+    <div class="badge">Appendix · Methodology &amp; Key Assumptions</div>
+    <div class="snum">A</div>
+    <h2 class="stitle" style="color:rgba(255,255,255,.8)">Assumptions, Data Caveats<br>&amp; Analytical Methods</h2>
+    <p class="iline" style="border-color:rgba(148,163,184,.35)">Every figure in this presentation traces to the processed dataset. Where estimates were required, inputs and methods are documented here. Observed facts and directional estimates are clearly separated throughout.</p>
+  </div>
+  <div class="hrule"></div>
+  <div class="body c3">
+    <div class="cell w2">
+      <div class="lbl">Projection Inputs &amp; Confidence Levels</div>
+      <table class="tbl" style="margin-top:4px">
+        <thead><tr><th>Metric / Figure</th><th>Basis</th><th>Confidence</th></tr></thead>
+        <tbody>
+          <tr><td>Balanced Opp. book multiple (0.86×)</td><td class="mn">Actual: AUM ÷ onboarding capital from transaction data</td><td><span class="tag" style="background:rgba(16,185,129,.12);color:#6EE7B7">Observed</span></td></tr>
+          <tr><td>Top-10% AUM share (68%)</td><td class="mn">Actual: customer AUM rank aggregation</td><td><span class="tag" style="background:rgba(16,185,129,.12);color:#6EE7B7">Observed</span></td></tr>
+          <tr><td>RM 1-yr retention gap (17pp)</td><td class="mn">Actual: Sonia Sheikh 91.8% vs Sumaya Siddique 74.5%</td><td><span class="tag" style="background:rgba(16,185,129,.12);color:#6EE7B7">Observed</span></td></tr>
+          <tr><td>Capital Growth 47.2% churn</td><td class="mn">Actual: (Closed + Discontinued) / Total Accounts for fund</td><td><span class="tag" style="background:rgba(16,185,129,.12);color:#6EE7B7">Observed</span></td></tr>
+          <tr><td>Cross-sell pipeline (৳8.02 Cr)</td><td class="mn">Target customers × median ticket. Full pipeline, not converted amount.</td><td><span class="tag" style="background:rgba(245,158,11,.12);color:#FCD34D">Directional</span></td></tr>
+          <tr><td>Per-fund AUM (Fixed Income, SG, CG)</td><td class="mn">Estimated from book multiples × relative account count distribution</td><td><span class="tag" style="background:rgba(245,158,11,.12);color:#FCD34D">Estimated</span></td></tr>
+          <tr><td>2024–2025 cohort 36m survival</td><td class="mn">Projected from current trajectory — insufficient elapsed time</td><td><span class="tag" style="background:rgba(245,158,11,.12);color:#FCD34D">Projected</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cell">
+      <div class="lbl">Data Limitations</div>
+      <div class="txt"><ul>
+        <li><span class="hl">No NAV data:</span> All AUM = book-value (capital flow) based. Investment return cannot be assessed. Book multiple measures capital retention, not investment performance.</li>
+        <li><span class="hl">SIP persistency ≠ retention:</span> Persistency measures payment regularity. A customer can maintain 100% persistency and still close their account. Do not substitute for churn metric.</li>
+        <li><span class="hl">Customer key:</span> Mobile phone used as unique customer identifier per case brief. Shared or changed numbers may cause 1–3% count inaccuracy.</li>
+        <li><span class="hl">RM attribution:</span> Based on introducer_rm_name at account open. Transferred accounts retain original RM attribution — may understate current manager quality for some.</li>
+        <li><span class="hl">Churn definition (strict):</span> Closed + Discontinued only. Inactive excluded from base calculation. Suspended (2 accounts) excluded entirely.</li>
+        <li><span class="hl">2025 is partial year:</span> Data through May 2025 (~5 months). All 2025 figures understate full-year totals.</li>
+      </ul></div>
+      <div class="lbl" style="margin-top:10px">Analytical Methods</div>
+      <div class="txt"><ul>
+        <li><span class="hl">K-means clustering (k=4):</span> Features: AUM, installment size, age, tenor. Silhouette score 0.42. k selected via elbow method on inertia curve (WCSS).</li>
+        <li><span class="hl">Kaplan-Meier survival:</span> Account closure = event. Active accounts censored at data cut. Cohort survival plotted at 12m / 24m / 36m milestones. Implemented via Python Lifelines.</li>
+        <li><span class="hl">Composite fund score:</span> Net flow 40% + 36m survival 25% + churn inverse 20% + SIP persistency 15%. Normalised 0–100 within 4-fund cohort — relative, not absolute measure.</li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="snotes">
+    <div class="nlbl">🎤 Notes</div>
+    <div class="ntxt"><strong>On transparency:</strong> "Every number in this analysis is either observed from the data or clearly marked as estimated or projected. The 0.86× book multiple is real — it comes directly from transaction records. The ৳8 Cr cross-sell is a pipeline maximum — the year-1 realistic figure at 25–30% conversion is ৳2–3 Cr. Anyone scrutinising these numbers can trace them to this appendix."</div>
+  </div>
+</div>
+
+</div><!-- /slides -->
+
+<div class="fnav">
+  <button class="nbtn" id="btnPrev" onclick="goTo(cur-1)" disabled>← Prev</button>
+  <div class="dots" id="dotsRow"></div>
+  <button class="nbtn pr" id="btnNext" onclick="goTo(cur+1)">Next →</button>
+</div>
+
+<script>
+const TOTAL=10;
+let cur=0;
+const ACC=['ia','ia','','','','','','','ca','ap'];
+
+function goTo(n){
+  if(n<0||n>=TOTAL)return;
+  document.getElementById('s'+cur).classList.remove('active');
+  cur=n;
+  document.getElementById('s'+cur).classList.add('active');
+  document.getElementById('ctr').textContent='Slide '+(cur+1)+' / '+TOTAL;
+  document.getElementById('btnPrev').disabled=cur===0;
+  document.getElementById('btnNext').disabled=cur===TOTAL-1;
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
+  document.querySelectorAll('.pill').forEach((p,i)=>p.classList.toggle('active',i===cur));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+const dr=document.getElementById('dotsRow');
+for(let i=0;i<TOTAL;i++){
+  if(i===2||i===8){const sep=document.createElement('div');sep.className='dsep';dr.appendChild(sep)}
+  const d=document.createElement('div');
+  d.className='dot'+(ACC[i]?' '+ACC[i]:'')+(i===0?' active':'');
+  d.onclick=()=>goTo(i);
+  dr.appendChild(d);
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown')goTo(cur+1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')goTo(cur-1);
+});
+
+document.addEventListener('chartjsReady',buildCharts);
+if(typeof Chart!=='undefined')buildCharts();
+
+function buildCharts(){
+  Chart.defaults.color='#64748B';
+  Chart.defaults.borderColor='rgba(255,255,255,0.05)';
+  Chart.defaults.font.family="'DM Sans',sans-serif";
+  Chart.defaults.font.size=11;
+  const G='rgba(255,255,255,0.04)';
+
+  /* S1 Overview: grouped bar + churn line */
+  new Chart(document.getElementById('cOverview'),{
+    type:'bar',
+    data:{
+      labels:['Fixed Income','Shariah Growth','Capital Growth','Balanced Opp.'],
+      datasets:[
+        {label:'Composite Score (/100)',data:[98.8,59.3,56.5,18.3],backgroundColor:['rgba(16,185,129,.7)','rgba(245,158,11,.6)','rgba(245,158,11,.5)','rgba(239,68,68,.7)'],borderColor:['#10B981','#F59E0B','#F59E0B','#EF4444'],borderWidth:1.5,borderRadius:4,yAxisID:'y'},
+        {label:'Churn Rate %',data:[16,31,47.2,45],type:'line',borderColor:'rgba(239,68,68,.65)',backgroundColor:'transparent',pointBackgroundColor:['#10B981','#F59E0B','#EF4444','#EF4444'],borderWidth:2,pointRadius:5,yAxisID:'y2'}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{padding:14,boxWidth:10}}},
+      scales:{y:{min:0,max:110,ticks:{callback:v=>v+'/100'},grid:{color:G}},y2:{position:'right',min:0,max:65,ticks:{callback:v=>v+'%'},grid:{display:false}}}}
+  });
+
+  /* S2 Score horizontal bar */
+  new Chart(document.getElementById('cScore'),{
+    type:'bar',
+    data:{labels:['Fixed Income','Shariah Growth','Capital Growth','Balanced Opp.'],
+      datasets:[{label:'Score',data:[98.8,59.3,56.5,18.3],backgroundColor:['rgba(16,185,129,.7)','rgba(245,158,11,.6)','rgba(245,158,11,.5)','rgba(239,68,68,.7)'],borderColor:['#10B981','#F59E0B','#F59E0B','#EF4444'],borderWidth:1.5,borderRadius:4}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.x}/100`}}},
+      scales:{x:{min:0,max:105,grid:{color:G}},y:{grid:{display:false}}}}
+  });
+
+  /* S3 Cohort survival */
+  new Chart(document.getElementById('cCohort'),{
+    type:'line',
+    data:{labels:['2018','2019','2020','2021','2022','2023','2024','2025*'],
+      datasets:[
+        {label:'36m Account Survival',data:[69.8,56.7,70.2,59.3,51.9,57.9,69.9,82.1],borderColor:'#EF4444',backgroundColor:'rgba(239,68,68,.07)',fill:true,tension:0.3,borderWidth:2.5,pointRadius:5,pointBackgroundColor:ctx=>ctx.parsed.y>=70?'#10B981':ctx.parsed.y>=60?'#F59E0B':'#EF4444'},
+        {label:'70% reference',data:Array(8).fill(70),borderColor:'rgba(16,185,129,.3)',borderDash:[5,4],borderWidth:1.5,pointRadius:0,fill:false}
+      ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{padding:12,boxWidth:10}}},
+      scales:{y:{min:45,max:90,ticks:{callback:v=>v+'%'},grid:{color:G}},x:{grid:{display:false}}}}
+  });
+
+  /* S3 36m by fund */
+  new Chart(document.getElementById('cSurv36'),{
+    type:'bar',
+    data:{labels:['Fixed Income','Balanced Opp.','Capital Growth','Shariah Growth'],
+      datasets:[{label:'36m Survival',data:[77.2,66.3,54.2,52.6],backgroundColor:['rgba(16,185,129,.7)','rgba(245,158,11,.6)','rgba(239,68,68,.55)','rgba(239,68,68,.65)'],borderColor:['#10B981','#F59E0B','#EF4444','#EF4444'],borderWidth:1.5,borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.y}% survive to 36m`}}},
+      scales:{y:{min:42,max:84,ticks:{callback:v=>v+'%'},grid:{color:G}},x:{grid:{display:false}}}}
+  });
+
+  /* S4 Segment donut */
+  new Chart(document.getElementById('cSegDonut'),{
+    type:'doughnut',
+    data:{labels:['Senior High-Ticket','Lump-sum Legacy','Core SIP','Long-horizon SIP'],
+      datasets:[{data:[2129,909,5167,330],backgroundColor:['rgba(139,92,246,.7)','rgba(239,68,68,.6)','rgba(59,130,246,.65)','rgba(16,185,129,.65)'],borderColor:['#8B5CF6','#EF4444','#3B82F6','#10B981'],borderWidth:1.5}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+      plugins:{legend:{position:'bottom',labels:{padding:10,boxWidth:10,font:{size:10.5}}},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${ctx.raw.toLocaleString()} customers`}}}}
+  });
+
+  /* S4 Fund × segment stacked — sorted by total accounts descending */
+  new Chart(document.getElementById('cFundSeg'),{
+    type:'bar',
+    data:{labels:['Capital Growth','Shariah Growth','Fixed Income','Balanced Opp.'],
+      datasets:[
+        {label:'High-value / Lump-sum',data:[632,738,985,683],backgroundColor:'rgba(139,92,246,.65)',borderColor:'#8B5CF6',borderWidth:1.5,borderRadius:3},
+        {label:'Mainstream SIP',data:[189,57,27,57],backgroundColor:'rgba(59,130,246,.6)',borderColor:'#3B82F6',borderWidth:1.5,borderRadius:3},
+        {label:'Young / Small-ticket',data:[1792,1455,1113,807],backgroundColor:'rgba(16,185,129,.55)',borderColor:'#10B981',borderWidth:1.5,borderRadius:3}
+      ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{padding:12,boxWidth:10}}},
+      scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,grid:{color:G}}}}
+  });
+
+  /* S5 Cross-sell horizontal bar */
+  new Chart(document.getElementById('cXsell'),{
+    type:'bar',
+    data:{labels:['Play 1 · Single→Multi-fund\n4,251 customers','Play 2 · Non-SIP→SIP\n348 customers (annual)','Play 3 · High-value singles\n2,273 customers'],
+      datasets:[{label:'Pipeline (৳ Crore)',data:[5.10,2.92,2.73],backgroundColor:['rgba(16,185,129,.72)','rgba(16,185,129,.52)','rgba(16,185,129,.38)'],borderColor:'#10B981',borderWidth:1.5,borderRadius:4}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`৳${ctx.parsed.x.toFixed(2)} Cr`}}},
+      scales:{x:{ticks:{callback:v=>'৳'+v+'Cr'},grid:{color:G}},y:{grid:{display:false}}}}
+  });
+
+  /* S6 RM performance dual-axis */
+  const rmN=['Shanta Sheikh','Sharifa Begum','Shibani Datta','M. Jasim Ahmed','Jannatul Islam','Sonia Sheikh','Kamrun Mia','Rina Akter'];
+  const rmA=[34.8,21.4,16.3,14.8,11.0,8.0,7.2,6.8];
+  const rmR=[63.7,87.6,86.3,83.4,85.8,91.8,84.7,84.6];
+  new Chart(document.getElementById('cRM'),{
+    type:'bar',
+    data:{labels:rmN,
+      datasets:[
+        {label:'AUM Introduced (৳ Cr)',data:rmA,backgroundColor:rmR.map(r=>r>=90?'rgba(139,92,246,.6)':r>=86?'rgba(59,130,246,.55)':r>=84?'rgba(245,158,11,.55)':'rgba(239,68,68,.6)'),borderColor:rmR.map(r=>r>=90?'#8B5CF6':r>=86?'#3B82F6':r>=84?'#F59E0B':'#EF4444'),borderWidth:1.5,borderRadius:4,yAxisID:'y'},
+        {label:'1-yr Retention %',data:rmR,type:'line',borderColor:'rgba(255,255,255,.35)',backgroundColor:'transparent',pointBackgroundColor:rmR.map(r=>r>=90?'#10B981':r>=86?'#6EE7B7':r>=84?'#F59E0B':'#EF4444'),borderWidth:1.8,pointRadius:5,yAxisID:'y2'},
+        {label:'86% threshold',data:Array(8).fill(86),type:'line',borderColor:'rgba(239,68,68,.32)',borderDash:[4,3],borderWidth:1.2,pointRadius:0,fill:false,yAxisID:'y2'}
+      ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{padding:12,boxWidth:10,filter:i=>i.text!=='86% threshold'}}},
+      scales:{y:{min:0,ticks:{callback:v=>'৳'+v+'Cr'},grid:{color:G}},y2:{position:'right',min:58,max:96,ticks:{callback:v=>v+'%'},grid:{display:false}},x:{grid:{display:false},ticks:{maxRotation:35,font:{size:10}}}}}
+  });
+
+  /* S7 Team trend */
+  new Chart(document.getElementById('cTeam'),{
+    type:'bar',
+    data:{labels:['2021','2022','2023','2024','2025*'],
+      datasets:[
+        {label:'New Accounts',data:[316,548,700,1083,643],backgroundColor:['rgba(59,130,246,.6)','rgba(59,130,246,.6)','rgba(59,130,246,.6)','rgba(139,92,246,.65)','rgba(139,92,246,.4)'],borderColor:['#3B82F6','#3B82F6','#3B82F6','#8B5CF6','#8B5CF6'],borderWidth:1.5,borderRadius:4,yAxisID:'y'},
+        {label:'AUM Introduced (৳ Cr)',data:[7.5,13.3,19.7,26.1,37.8],type:'line',borderColor:'#10B981',backgroundColor:'rgba(16,185,129,.07)',fill:true,tension:0.3,borderWidth:2.5,pointRadius:5,pointBackgroundColor:'#10B981',yAxisID:'y2'}
+      ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'bottom',labels:{padding:14,boxWidth:10}}},
+      scales:{y:{min:0,ticks:{callback:v=>v+' accts'},grid:{color:G}},y2:{position:'right',min:0,ticks:{callback:v=>'৳'+v+'Cr'},grid:{display:false}},x:{grid:{display:false}}}}
+  });
+}
+</script>
+</body>
+</html>

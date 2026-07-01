@@ -26,7 +26,6 @@ apex/
     ├── apex_analysis.ipynb            # Full analytical notebook (primary deliverable)
     ├── apex_dashboard.html            # Interactive BI dashboard (5-tab, Chart.js)
     ├── apex_presentation.html         # 10-slide presentation deck (speaker notes included)
-    ├── apex_deck.pptx                 # PowerPoint export
     └── clean/
         ├── master_clean.csv           # Cleaned master file (feature-engineered)
         └── ledger_clean.csv           # Cleaned transaction ledger
